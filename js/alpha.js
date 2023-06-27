@@ -189,6 +189,9 @@ class Alpha{
 
 
         })
+        document.getElementById('searchBarStim').addEventListener('click', function(){
+            document.getElementById('searchBarStim').value = '';
+        })
 
         // d3.select("#searchBarBase").on("change", function(d) {
         document.getElementById('searchBarBase').addEventListener('change', function(){
@@ -208,6 +211,10 @@ class Alpha{
             d3.select("#top_check").property('checked', false)
 
 
+        })
+
+        document.getElementById('searchBarBase').addEventListener('click', function(){
+            document.getElementById('searchBarBase').value = '';
         })
 
        
