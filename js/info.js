@@ -26,6 +26,11 @@ class Info{
         this.datalist = document.createElement("datalist");
         this.datalist.id = "searchOptions";
 
+        document.getElementById('searchBar').value = '';
+        document.getElementById('searchBarBase').value = '';
+        document.getElementById('searchBarStim').value = '';
+
+
         this.infoSvg = this.info_div.append("svg")
         .attr('id', 'alpha_svg')
         .attr('width', this.WIDTH)
@@ -105,6 +110,79 @@ class Info{
                 d3.select(".info-tooltip").style("opacity", 0);
               }, that.TOOL_TIP_TIME_OUT)
         });
+
+        document.getElementById('searchBar').addEventListener('click', function(){
+            document.getElementById('searchBar').value = '';
+        })
+
+        
+        //***********************************************************************
+        //                       Add tool tips for each button/component
+        //***********************************************************************        
+        
+        d3.selectAll('.control_check_group').on("mouseover", (event, d) => {
+            d3.select(".tooltip")
+                .html("Toggle on to see Negative Controls<br><br>Negative controls include <br>Spacer and Scramble architectures")
+                .style("left", `${event.pageX + 30}px`)
+                .style("top", `${event.pageY - 10}px`)
+                .transition()
+                .delay(750)
+                .style("opacity", 1)
+          })
+          .on("mousemove", (event, d) => {
+            d3.select(".tooltip")
+              .style("left", `${event.pageX + 30}px`)
+              .style("top", `${event.pageY - 10}px`)
+          })
+          .on("mouseleave", (event, d) => {
+            d3.select(".tooltip")
+            .style("opacity", 0)
+            .style("left", "-300px")
+            .style("top", "-300px")
+          })
+
+        d3.selectAll('.top_check_group').on("mouseover", (event, d) => {
+            d3.select(".tooltip")
+                .html("Toggle on to see top N motifs<br><br>Negative controls include <br>Spacer and Scramble architectures")
+                .style("left", `${event.pageX + 30}px`)
+                .style("top", `${event.pageY - 10}px`)
+                .transition()
+                .delay(750)
+                .style("opacity", 1)
+          })
+          .on("mousemove", (event, d) => {
+            d3.select(".tooltip")
+              .style("left", `${event.pageX + 30}px`)
+              .style("top", `${event.pageY - 10}px`)
+          })
+          .on("mouseleave", (event, d) => {
+            d3.select(".tooltip")
+            .style("opacity", 0)
+            .style("left", "-300px")
+            .style("top", "-300px")
+          })
+
+
+        d3.select('#copy-button').on("mouseover", (event, d) => {
+            d3.select(".tooltip")
+                .html("Click to copy the TRE Unit sequence <br>The sequence does not include the promoter ")
+                .style("left", `${event.pageX + 30}px`)
+                .style("top", `${event.pageY - 10}px`)
+                .transition()
+                .delay(750)
+                .style("opacity", 1)
+          })
+          .on("mousemove", (event, d) => {
+            d3.select(".tooltip")
+              .style("left", `${event.pageX + 30}px`)
+              .style("top", `${event.pageY - 10}px`)
+          })
+          .on("mouseleave", (event, d) => {
+            d3.select(".tooltip")
+            .style("opacity", 0)
+            .style("left", "-300px")
+            .style("top", "-300px")
+          })
 
         
    

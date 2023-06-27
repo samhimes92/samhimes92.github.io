@@ -62,9 +62,9 @@ class Volcano{
             .style("stroke", this.FDR_LINE_COLOR)
             .style("stroke-width", 4)
             .attr("x1", 615)
-            .attr("y1",700)
+            .attr("y1",695)
             .attr("x2", 635)
-            .attr("y2", 700); 
+            .attr("y2", 695); 
 
         this.volcanoSvg
         .append("text")
@@ -352,8 +352,8 @@ class Volcano{
                   })
                   .on("mouseleave", (event, d) => {
                     d3.select(".tooltip").style("opacity", 0)
-                    .style("left", "-30px")
-                    .style("top", "-30px")
+                    .style("left", "-300px")
+                    .style("top", "-300px")
                   })
                   .on("click", (event, d) => {
                     that.info.click(d)

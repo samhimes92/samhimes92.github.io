@@ -8,23 +8,6 @@
 //   "#FFC75F" 
 // ]);
 
-// let scaleColor = d3.scaleOrdinal() 
-//   .domain([1,2,3,4,5])
-//   .range(["#ffffcc",  
-//   "#a1dab4",  
-//   "#41b6c4", 
-//   "#2c7fb8" ,
-//   "#253494" 
-// ]);
-
-// let scaleColor = d3.scaleOrdinal() 
-//   .domain([1,2,3,4,5])
-//   .range(["#1D2977",  
-//   "#216390",  
-//   "#3495A0", 
-//   "#7EAD8D" ,
-//   "#CECEA3" 
-// ]);
 
 let scaleColor = d3.scaleOrdinal() 
   .domain([5,4,3,2,1])

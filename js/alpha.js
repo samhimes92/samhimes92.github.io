@@ -43,8 +43,8 @@ class Alpha{
         this.alphaSvg.append("circle").attr("cx",510).attr("cy",220).attr("r", 6).attr("stroke", "black").style("fill", this.globalApplicationState.scaleColor(4))
         this.alphaSvg.append("circle").attr("cx",510).attr("cy",250).attr("r", 6).attr("stroke", "black").style("fill", this.globalApplicationState.scaleColor(5))
 
-        this.alphaSvg.append("text").attr("x",490).attr("y",90).text("Motif's with highest").style("font-size", "17px").attr("alignment-baseline","middle")
-        this.alphaSvg.append("text").attr("x",490).attr("y",110).text("absolute Log2 FC").style("font-size", "17px").attr("alignment-baseline","middle")
+        this.alphaSvg.append("text").attr("x",490).attr("y",90).text("Motif Ranking based on").style("font-size", "17px").attr("alignment-baseline","middle")
+        this.alphaSvg.append("text").attr("x",490).attr("y",110).text("highest absolute Log2 FC").style("font-size", "17px").attr("alignment-baseline","middle")
 
         this.alphaSvg.append("text").attr("x",530).attr("y",130).text("1").style("font-size", "15px").attr("alignment-baseline","middle")
         this.alphaSvg.append("text").attr("x",530).attr("y",160).text("2").style("font-size", "15px").attr("alignment-baseline","middle")
@@ -191,6 +191,14 @@ class Alpha{
         })
         document.getElementById('searchBarStim').addEventListener('click', function(){
             document.getElementById('searchBarStim').value = '';
+            
+            that.globalApplicationState.stimulated = null
+            that.drawAlphaScatter()
+            that.volcano.drawVolcano()
+            that.filter_options(that.globalApplicationState.stimulated, "stim")
+            that.info.updateSearchOptions()
+            d3.select("#control_check").property('checked', false)
+            d3.select("#top_check").property('checked', false)
         })
 
         // d3.select("#searchBarBase").on("change", function(d) {
@@ -215,6 +223,13 @@ class Alpha{
 
         document.getElementById('searchBarBase').addEventListener('click', function(){
             document.getElementById('searchBarBase').value = '';
+            that.globalApplicationState.base = null
+            that.drawAlphaScatter()
+            that.volcano.drawVolcano()
+            that.filter_options(that.globalApplicationState.base, "base")
+            that.info.updateSearchOptions()
+            d3.select("#control_check").property('checked', false)
+            d3.select("#top_check").property('checked', false)
         })
 
        
@@ -262,6 +277,17 @@ class Alpha{
         .attr("x",-(this.HEIGHT/2))
         .style("text-anchor", "middle")
         .text("Stimulated Alpha");
+
+
+        this.alphaSvg
+            .append('line')
+            .style("stroke", "grey")
+            .style("stroke-width", 1)
+            .attr("x1", this.x_scale(0))
+            .attr("y1", this.y_scale(0))
+            .attr("x2", this.x_scale(this.max))
+            .attr("y2", this.y_scale(this.max))
+            .attr("opacity", ".4") 
 
         this.points = this.alphaSvg.append('g')
 
@@ -380,7 +406,7 @@ class Alpha{
                 .attr('cy', (d)=> this.y_scale(d[this.stim_name]))
                 .attr('r', (d) =>{
                     if (selected_motif==""){
-                        if (+d[that.max_rank_name] <= 5){
+                        if (+d[that.max_rank_name] <= 5 & d[that.max_rank_name]!= ""){
                             return(this.TOP_5_RADIUS)
                         }
                         else{
@@ -443,8 +469,8 @@ class Alpha{
                   .on("mouseleave", (event, d) => {
                     d3.select(".tooltip")
                     .style("opacity", 0)
-                    .style("left", "-30px")
-                    .style("top", "-30px")
+                    .style("left", "-300px")
+                    .style("top", "-300px")
                   })
                   .on("click", (event, d) => {
                     that.info.click(d)
