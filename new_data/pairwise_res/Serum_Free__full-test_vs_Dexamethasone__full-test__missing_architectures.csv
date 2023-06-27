@@ -1,0 +1,10 @@
+architecture,treatment,run
+"GBX2-1:236, 1, set1, minProm",Dexamethasone,full-test
+"GLIS2-1:673, 8, set1, minTK",Dexamethasone,full-test
+"NFATC1-3:1437, 4, set2, minProm",Dexamethasone,full-test
+"RFX2-1:1466, 4, set2, minTK",Dexamethasone,full-test
+"RFX2-2:801, 8, set1, minProm",Dexamethasone,full-test
+"SP4-1:17, 1, set1, minCMV",Dexamethasone,full-test
+"SP4-1:683, 8, set1, minProm",Dexamethasone,full-test
+"TBX4-1:1491, 4, set2, minTK",Dexamethasone,full-test
+"GBX2-1:236, 1, set1, minProm",Serum Free,full-test
