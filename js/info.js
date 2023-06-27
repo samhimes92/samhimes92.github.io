@@ -11,6 +11,7 @@ class Info{
         this.MARGIN_TEXT_TOP = 50 
         this.MARGIN_BETWEEN_TEXT = 25
         this.TOOL_TIP_TIME_OUT = 500
+        this.TOOL_TIP_DELAY = 750
         
         this.globalApplicationState = globalApplicationState
         this.all_data = all_data
@@ -122,11 +123,11 @@ class Info{
         
         d3.selectAll('.control_check_group').on("mouseover", (event, d) => {
             d3.select(".tooltip")
-                .html("Toggle on to see Negative Controls<br><br>Negative controls include <br>Spacer and Scramble architectures")
+                .html("Toggle on to see negative controls.<br><br>Negative controls include <br>Spacer and Scramble architectures.")
                 .style("left", `${event.pageX + 30}px`)
                 .style("top", `${event.pageY - 10}px`)
                 .transition()
-                .delay(750)
+                .delay(this.TOOL_TIP_DELAY)
                 .style("opacity", 1)
           })
           .on("mousemove", (event, d) => {
@@ -143,11 +144,13 @@ class Info{
 
         d3.selectAll('.top_check_group').on("mouseover", (event, d) => {
             d3.select(".tooltip")
-                .html("Toggle on to see top N motifs<br><br>Negative controls include <br>Spacer and Scramble architectures")
+                .html("Toggle on to see top N motifs.<br><br>The top group had the motif with the<br>highest absolute log 2 fold change.\
+                <br>The second group had the motif with the<br>second highest absolute log 2 fold change. \
+                <br>etc.")
                 .style("left", `${event.pageX + 30}px`)
                 .style("top", `${event.pageY - 10}px`)
                 .transition()
-                .delay(750)
+                .delay(this.TOOL_TIP_DELAY)
                 .style("opacity", 1)
           })
           .on("mousemove", (event, d) => {
@@ -165,11 +168,54 @@ class Info{
 
         d3.select('#copy-button').on("mouseover", (event, d) => {
             d3.select(".tooltip")
-                .html("Click to copy the TRE Unit sequence <br>The sequence does not include the promoter ")
+                .html("Click to copy the TRE unit sequence. <br>The sequence does not include the promoter. ")
                 .style("left", `${event.pageX + 30}px`)
                 .style("top", `${event.pageY - 10}px`)
                 .transition()
-                .delay(750)
+                .delay(this.TOOL_TIP_DELAY)
+                .style("opacity", 1)
+          })
+          .on("mousemove", (event, d) => {
+            d3.select(".tooltip")
+              .style("left", `${event.pageX + 30}px`)
+              .style("top", `${event.pageY - 10}px`)
+          })
+          .on("mouseleave", (event, d) => {
+            d3.select(".tooltip")
+            .style("opacity", 0)
+            .style("left", "-300px")
+            .style("top", "-300px")
+          })
+
+          d3.select('#copy-button').on("mouseover", (event, d) => {
+            d3.select(".tooltip")
+                .html("Click to copy the TRE unit sequence. <br>The sequence does not include the promoter. ")
+                .style("left", `${event.pageX + 30}px`)
+                .style("top", `${event.pageY - 10}px`)
+                .transition()
+                .delay(this.TOOL_TIP_DELAY)
+                .style("opacity", 1)
+          })
+          .on("mousemove", (event, d) => {
+            d3.select(".tooltip")
+              .style("left", `${event.pageX + 30}px`)
+              .style("top", `${event.pageY - 10}px`)
+          })
+          .on("mouseleave", (event, d) => {
+            d3.select(".tooltip")
+            .style("opacity", 0)
+            .style("left", "-300px")
+            .style("top", "-300px")
+          })
+
+
+          d3.selectAll('.oligo_group').on("mouseover", (event, d) => {
+            d3.select(".tooltip")
+                .html("Click to copy the oligonucleotide sequence for cloning into TRE pGL4.R plasmids")
+                .style("left", `${event.pageX + 30}px`)
+                .style("top", `${event.pageY - 10}px`)
+                .transition()
+                .delay(this.TOOL_TIP_DELAY)
                 .style("opacity", 1)
           })
           .on("mousemove", (event, d) => {
