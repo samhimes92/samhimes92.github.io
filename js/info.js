@@ -211,7 +211,7 @@ class Info{
 
           d3.selectAll('.oligo_group').on("mouseover", (event, d) => {
             d3.select(".tooltip")
-                .html("Click to copy the oligonucleotide sequence for cloning into TRE pGL4.R plasmids")
+                .html("Click to copy the oligonucleotide sequence for <br>cloning into TRE pGL4.R plasmids")
                 .style("left", `${event.pageX + 30}px`)
                 .style("top", `${event.pageY - 10}px`)
                 .transition()

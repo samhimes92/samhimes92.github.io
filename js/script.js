@@ -8,7 +8,7 @@
 //   "#FFC75F" 
 // ]);
 
-
+//Color blind friendly
 let scaleColor = d3.scaleOrdinal() 
   .domain([5,4,3,2,1])
   .range(["#648FFF",  
@@ -19,23 +19,6 @@ let scaleColor = d3.scaleOrdinal()
 ]);
 
 
-// let scaleColor = d3.scaleOrdinal()  //Hokusai2
-//   .domain([1,2,3,4,5])
-//   .range(["#abc9c8",  
-//   "#72aeb6",  
-//   "#4692b0", 
-//   "#2f70a1" ,
-//   "#134b73" 
-// ]);
-
-// let scaleColor = d3.scaleOrdinal()  //Hiroshige
-//   .domain([1,2,3,4,5])
-//   .range(["#e76254",  
-//   "#ef8a47",  
-//   "#f7aa58", 
-//   "#ffd06f" ,
-//   "#ffe6b7" 
-// ]);
 
 
 const globalApplicationState = {
