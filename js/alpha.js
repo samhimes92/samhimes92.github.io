@@ -15,6 +15,7 @@ class Alpha{
         this.BRUSH_OFF_OPACITY=.1
         this.TOP_5_RADIUS = 4
         this.ALL_OTHER_RADIUS = 2.5
+        this.CHILD_OFF_OPACITY = .3
 
 
         this.CIRCLE_COLOR = "grey"
@@ -60,6 +61,9 @@ class Alpha{
         this.searchBarBase = document.getElementById("searchBarBase");
         this.datalistBase = document.createElement("datalist");
         this.datalistBase.id = "searchOptionsBase";
+
+        d3.selectAll('.child-div').style("opacity", this.CHILD_OFF_OPACITY).style("pointer-events", "none")
+
 
 
         //**********************************************************************************************
@@ -336,6 +340,9 @@ class Alpha{
 
         if (this.globalApplicationState.base != null && this.globalApplicationState.stimulated != null){
 
+            d3.selectAll('.child-div').style("opacity", "1").style("pointer-events", "all")
+
+
 
             //Remove everything before drawing again
             this.points
@@ -483,6 +490,8 @@ class Alpha{
         }
 
         else{
+            d3.selectAll('.child-div').style("opacity", this.CHILD_OFF_OPACITY).style("pointer-events", "none")
+
             this.globalApplicationState.selected_comparison = "none"
             this.points
                 .selectAll('circle')

@@ -11,7 +11,7 @@ class Info{
         this.MARGIN_TEXT_TOP = 50 
         this.MARGIN_BETWEEN_TEXT = 25
         this.TOOL_TIP_TIME_OUT = 500
-        this.TOOL_TIP_DELAY = 750
+        this.TOOL_TIP_DELAY = 1250
         
         this.globalApplicationState = globalApplicationState
         this.all_data = all_data
