@@ -382,7 +382,6 @@ class Alpha{
             if (selected_motif != ""){
                 selected_data = selected_data.filter(function(d){return d.motif == selected_motif})
             }
-            console.log("selected_data yo", selected_data)
             
     
             let max_base =  d3.max(selected_data.map(d => +d[this.base_name]))

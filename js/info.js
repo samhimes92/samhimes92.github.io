@@ -4,7 +4,7 @@ class Info{
         //**********************************************************************************************
         //                                  CONSTANTS FOR CHART SIZE
         //**********************************************************************************************
-        this.WIDTH = 1050
+        this.WIDTH = 600
         this.HEIGHT = 250
         this.NUM_DEC = 2
         this.MARGIN_TEXT_LEFT = 25
@@ -165,7 +165,6 @@ class Info{
             .style("top", "-300px")
           })
 
-
         d3.select('#copy-button').on("mouseover", (event, d) => {
             d3.select(".tooltip")
                 .html("Click to copy the TRE unit sequence. <br>The sequence does not include the promoter. ")
@@ -191,7 +190,7 @@ class Info{
             d3.select(".tooltip")
                 .html("Click to copy the TRE unit sequence. <br>The sequence does not include the promoter. ")
                 .style("left", `${event.pageX + 30}px`)
-                .style("top", `${event.pageY - 10}px`)
+                .style("top", `${event.pageY - 60}px`)
                 .transition()
                 .delay(this.TOOL_TIP_DELAY)
                 .style("opacity", 1)
@@ -199,7 +198,7 @@ class Info{
           .on("mousemove", (event, d) => {
             d3.select(".tooltip")
               .style("left", `${event.pageX + 30}px`)
-              .style("top", `${event.pageY - 10}px`)
+              .style("top", `${event.pageY - 60}px`)
           })
           .on("mouseleave", (event, d) => {
             d3.select(".tooltip")
@@ -213,7 +212,7 @@ class Info{
             d3.select(".tooltip")
                 .html("Click to copy the oligonucleotide sequence for <br>cloning into TRE pGL4.R plasmids")
                 .style("left", `${event.pageX + 30}px`)
-                .style("top", `${event.pageY - 10}px`)
+                .style("top", `${event.pageY - 60}px`)
                 .transition()
                 .delay(this.TOOL_TIP_DELAY)
                 .style("opacity", 1)
@@ -221,7 +220,7 @@ class Info{
           .on("mousemove", (event, d) => {
             d3.select(".tooltip")
               .style("left", `${event.pageX + 30}px`)
-              .style("top", `${event.pageY - 10}px`)
+              .style("top", `${event.pageY - 60}px`)
           })
           .on("mouseleave", (event, d) => {
             d3.select(".tooltip")
@@ -240,8 +239,9 @@ class Info{
         const tooltip = d3.select(".info-tooltip");
         tooltip.style("opacity", 1)
           .html(text)
-          .style("left", `${x}px`)
-          .style("top", `${y}px`);
+          //.style("position", "relative")
+          .style("left", `20px`)
+          .style("top", `250px`);
       }
 
     copyClicked(event, type){
@@ -272,7 +272,7 @@ class Info{
         const that = this
         navigator.clipboard.writeText(textToCopy).then(function() {
             console.log("Text copied!");
-            that.showTooltip(tooltipText,   event.pageX - 700,  event.pageY - 700);
+            that.showTooltip(tooltipText);
         }, function(err) {
             that.showTooltip("Error: Unable to Copy", event.pageX, event.pageY);
             console.error("Unable to copy text: ", err);
