@@ -115,18 +115,6 @@ Promise.all([all_data, sequences]).then( data =>
 
 
 
-    // d3.select("#motif-wrapper-div").style("display", "none");
-
-    // d3.select("#motif_view_button").on("click", function() {
-    //   d3.select("#motif-wrapper-div").style("display", "block");
-    //   d3.select("#treatment-wrapper-div").style("display", "none"); // Corrected "diplay" to "display"
-    // });
-    
-    // d3.select("#treatment_view_button").on("click", function() {
-    //   d3.select("#motif-wrapper-div").style("display", "none");
-    //   d3.select("#treatment-wrapper-div").style("display", "block");
-    // });
-
 
 
 
