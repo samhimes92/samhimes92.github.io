@@ -1,5 +1,6 @@
 class Alpha{
-    constructor(all_data,globalApplicationState,volcano){
+    constructor(all_data,globalApplicationState,volcano, h){
+
 
         //**********************************************************************************************
         //                                      CONSTANTS 
@@ -27,6 +28,7 @@ class Alpha{
         this.globalApplicationState = globalApplicationState
         
         this.all_data = all_data
+        this.h = h
 
         this.volcano = volcano
         this.alpha_div = d3.select("#alpha-div") 
@@ -69,9 +71,6 @@ class Alpha{
         //**********************************************************************************************
         //                                 SELECTORS
         //**********************************************************************************************
-
-      
-
 
         //For getting unique values for base a stimulated
         function onlyUnique(value, index, self) {
@@ -146,7 +145,6 @@ class Alpha{
             d3.select("#control_check").property('checked', false)
             that.drawAlphaScatter()
             that.points.selectAll("circle")
-                // .style("opacity", d => (+d[that.max_rank_name] <= 5) )
                 .filter(d => +d[that.max_rank_name] > n | d[that.max_rank_name] == "")
                 .remove();
         } 
@@ -245,7 +243,7 @@ class Alpha{
         // Get inititial min and max for scales (Will change upon selection)
         //***************************************
 
-        this.min =  0
+        this.min = -.5
         this.max =  5
 
         this.x_scale = d3.scaleLinear()
@@ -271,7 +269,8 @@ class Alpha{
         .attr("id", "base_text")
         .attr("transform","translate(" + this.WIDTH / 2 + " ," + (this.HEIGHT - 10) + ")")
         .style("text-anchor", "middle")
-        .text("Basal Alpha");
+        .text("Basal Alpha")
+        .style('fill', '#6C4343');
 
         this.alphaSvg
         .append("text")
@@ -280,7 +279,8 @@ class Alpha{
         .attr("y", 15)
         .attr("x",-(this.HEIGHT/2))
         .style("text-anchor", "middle")
-        .text("Stimulated Alpha");
+        .text("Stimulated Alpha")
+        .style('fill', '#00429d');
 
 
         this.alphaSvg
@@ -342,8 +342,6 @@ class Alpha{
 
             d3.selectAll('.child-div').style("opacity", "1").style("pointer-events", "all")
 
-
-
             //Remove everything before drawing again
             this.points
                 .selectAll('circle')
@@ -358,9 +356,8 @@ class Alpha{
             this.stim_name = "alpha__"+stim_treatment+"__"+stim_run
             this.base_name = "alpha__"+base_treatment+"__"+base_run
             this.max_rank_name = "maxRank__" +base_treatment+"__"+base_run+"_vs_"+stim_treatment+"__"+stim_run
-            let max_name = "max__" +base_treatment+"__"+base_run+"_vs_"+stim_treatment+"__"+stim_run
-            let logFC_col = "logFC__"+this.globalApplicationState.selected_comparison
-            let pval_col = "statistic__"+this.globalApplicationState.selected_comparison
+            this.n_rna_stim_name = "RNA_barcodes__" +stim_treatment+"__"+stim_run
+            this.n_rna_base_name = "RNA_barcodes__" +base_treatment+"__"+base_run
 
 
             d3.select("#base_text").text("Basal Alpha "+base_treatment + " ("+ base_run +")")
@@ -369,21 +366,21 @@ class Alpha{
             this.globalApplicationState.selected_comparison = base_treatment+"__"+base_run+"_vs_"+stim_treatment+"__"+stim_run
 
             const that = this
-            let selected_data = this.all_data.filter(function(d){return d[that.base_name]!= "";})
-            selected_data = selected_data.filter(function(d){return d[that.stim_name] != "";})
 
-        
-            //Filter the same way we filter volcano data so all points are in each 
-            selected_data = selected_data.filter(function(d){return d[pval_col]!= "";})
-            selected_data = selected_data.filter(function(d){return d[logFC_col] != "";})
 
-            this.globalApplicationState.motifs = [...new Set(selected_data.map((item) => item.motif))];
+            let filter_res = this.h.filter_comparison_data(
+                this.all_data, 
+                base_treatment, 
+                stim_treatment, 
+                base_run, 
+                stim_run, 
+                selected_motif, 
+                this.globalApplicationState.min_RNA, 
+                this.globalApplicationState.min_DNA)
 
-            if (selected_motif != ""){
-                selected_data = selected_data.filter(function(d){return d.motif == selected_motif})
-            }
-            
-    
+            let selected_data = filter_res[0]
+            this.globalApplicationState.motifs = filter_res[1]
+
             let max_base =  d3.max(selected_data.map(d => +d[this.base_name]))
             let max_stim =  d3.max(selected_data.map(d => +d[this.stim_name]))
 

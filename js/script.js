@@ -1,3 +1,4 @@
+import helpers from './helper.js';
 
 // let scaleColor = d3.scaleOrdinal() 
 //   .domain([1,2,3,4,5])
@@ -18,6 +19,9 @@ let scaleColor = d3.scaleOrdinal()
   "#FFB000" 
 ]);
 
+// import * as helper from './helper.js';     
+
+
 
 
 
@@ -33,13 +37,18 @@ const globalApplicationState = {
     motifs: [],
     selected_comparison: "none",
     selected_motif: "none",
-    scaleColor: scaleColor
-
-
+    scaleColor: scaleColor,
+    min_RNA: 2,
+    min_DNA: 2
   };
 
-all_data = d3.csv("./new_data/current_runs.csv")
-sequences = d3.csv("./new_data/sequences.csv")
+
+
+let all_data = d3.csv("./data/current_runs.csv")
+let sequences = d3.csv("./data/sequences.csv")
+
+console.log("After reading data")
+console.log("all_data", all_data)
 
 let tooltip = d3.select("body")
   .attr("id", "tooltip")
@@ -48,9 +57,6 @@ let tooltip = d3.select("body")
   .attr("id", "tool_tip_div")
   .attr("class", "tooltip")
   .style("position", "absolute")
-
-
-
 
 
 Promise.all([all_data, sequences]).then( data =>
@@ -67,17 +73,17 @@ Promise.all([all_data, sequences]).then( data =>
         let stim_treatments = []
         for (let i = 0; i < columns.length; i++) {
           if (columns[i].startsWith("logFC__")){
-            cur_comp = columns[i]
+            let cur_comp = columns[i]
             console.log("CUR COMP", cur_comp)
 
             cur_comp = cur_comp.replace("logFC__", "")
             cur_comp = cur_comp.replace(".csv", "")
 
-            base_treatment = cur_comp.split("_vs_")[0].split("__")[0]
-            base_run = cur_comp.split("_vs_")[0].split("__")[1]
+            let base_treatment = cur_comp.split("_vs_")[0].split("__")[0]
+            let base_run = cur_comp.split("_vs_")[0].split("__")[1]
 
-            stim_treatment = cur_comp.split("_vs_")[1].split("__")[0]
-            stim_run = cur_comp.split("_vs_")[1].split("__")[1]
+            let stim_treatment = cur_comp.split("_vs_")[1].split("__")[0]
+            let stim_run = cur_comp.split("_vs_")[1].split("__")[1]
 
             base_runs.push(base_run)
             base_treatments.push(base_treatment)
@@ -91,10 +97,13 @@ Promise.all([all_data, sequences]).then( data =>
           }
         }
 
+           
+        // console.log("Here I am")
+        // console.log(helper.test())
 
-        volcano = new Volcano(data[0], globalApplicationState)
-        alpha = new Alpha(data[0], globalApplicationState, volcano)
-        info = new Info(data[0], data[1], globalApplicationState, volcano, alpha)
+        let volcano = new Volcano(data[0], globalApplicationState, helpers)
+        let alpha = new Alpha(data[0], globalApplicationState, volcano, helpers)
+        let info = new Info(data[0], data[1], globalApplicationState, volcano, alpha, helpers)
 
         volcano.set_info(info)
         volcano.set_alpha(alpha)
@@ -103,5 +112,21 @@ Promise.all([all_data, sequences]).then( data =>
 
 
     });
+
+
+
+    // d3.select("#motif-wrapper-div").style("display", "none");
+
+    // d3.select("#motif_view_button").on("click", function() {
+    //   d3.select("#motif-wrapper-div").style("display", "block");
+    //   d3.select("#treatment-wrapper-div").style("display", "none"); // Corrected "diplay" to "display"
+    // });
+    
+    // d3.select("#treatment_view_button").on("click", function() {
+    //   d3.select("#motif-wrapper-div").style("display", "none");
+    //   d3.select("#treatment-wrapper-div").style("display", "block");
+    // });
+
+
 
 

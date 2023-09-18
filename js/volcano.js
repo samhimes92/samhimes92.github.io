@@ -1,5 +1,5 @@
 class Volcano{
-    constructor(all_data, globalApplicationState){
+    constructor(all_data, globalApplicationState, h){
 
         //**********************************************************************************************
         //                                  CONSTANTS FOR CHART SIZE
@@ -30,11 +30,14 @@ class Volcano{
 
         const that = this
 
+
         //**********************************************************************************************
         //                                  GENERAL SET UP 
         //**********************************************************************************************
         this.all_data = all_data
         this.globalApplicationState = globalApplicationState
+
+        this.h = h
 
         this.volcano_div = d3.select("#volcano-div") 
     
@@ -178,86 +181,69 @@ class Volcano{
                 .selectAll('line')
                 .remove()
 
-            let stim_name = "alpha__"+stim_treatment+"__"+stim_run
-            let base_name = "alpha__"+base_treatment+"__"+base_run
+            let base_run = this.globalApplicationState.base.split("\t(")[1].replace(")", "")
+            let base_treatment = this.globalApplicationState.base.split("\t(")[0]
+
+            let stim_run = this.globalApplicationState.stimulated.split("\t(")[1].replace(")", "")
+            let stim_treatment = this.globalApplicationState.stimulated.split("\t(")[0]
+
+       
             let logFC_col = "logFC__"+this.globalApplicationState.selected_comparison
             let statistic_name = "statistic__"+this.globalApplicationState.selected_comparison
             this.max_rank_name = "maxRank__" +this.globalApplicationState.selected_comparison
+            this.n_rna_stim_name = "RNA_barcodes__" +stim_treatment+"__"+stim_run
+            this.n_rna_base_name = "RNA_barcodes__" +base_treatment+"__"+base_run
             let fdr_name = "fdr__" +this.globalApplicationState.selected_comparison
 
-            let selected_data = this.all_data.filter(function(d){return d[statistic_name]!= "";})
-            selected_data = selected_data.filter(function(d){return d[logFC_col] != "";})
-            //filter the same way we filter alpha so all points are in each
-            selected_data = selected_data.filter(function(d){return d[base_name]!= "";})
-            selected_data = selected_data.filter(function(d){return d[stim_name] != "";})
 
-            let test = selected_data.map(d => +d[fdr_name] - .05)
-            let below = d3.max(test.filter(function(d){return d<0}))
-            let above = d3.min(test.filter(function(d){return d>0}))
-            let match = test.filter(function(d){return d===0})
-            let fdr_threshold = null
 
+            let fdr_vals = this.all_data.map(d => +d[fdr_name] - .05)
+            let below = d3.max(fdr_vals.filter(function(d){return d< 0})) //Gets the higest fdr below .05
+            let above = d3.min(fdr_vals.filter(function(d){return d> 0})) //Gets the lowest fdr above .05
+            let match = fdr_vals.filter(function(d){return d===0})          //Gets a list of fdrs that are exactly .05 (EXTREMELY UNLIKELY)
+            let statistic_threshold = null
+
+            //Sets the statistic_threshold by finding the static values closest to .05
+            //If a fdr value was .05 (if (extremely unlikely)) set the corresponding statistic to the fdr threshold
+            //Otherwise, get the mean of the statistics corresponding to the highest fdr below .05 and the lowest fdr above .05
             if (match.length != 0){
-                let exact_match = selected_data.filter(function(d){
+                let exact_match = this.all_data.filter(function(d){
                     return +d[fdr_name] - .05 === 0;
                 })
-                fdr_threshold = d3.mean(exact_match.map(d => d[statistic_name] ))
+                statistic_threshold = exact_match.map(d => d[statistic_name])
             }
             else{
-                let above_and_below = selected_data.filter(function(d){
+                let above_and_below = this.all_data.filter(function(d){
                     return +d[fdr_name] - .05 === above || +d[fdr_name] - .05 === below;
                 })
-                fdr_threshold = d3.mean(above_and_below.map(d => d[statistic_name] ))
-
+                statistic_threshold = d3.mean(above_and_below.map(d => d[statistic_name] ))
             }
 
 
 
-   
-            let log_fold_changes = selected_data.map(d => d[logFC_col]).filter((a) =>  a != "")
-            let max_fc = d3.max(log_fold_changes.map(d=> Number(d)))
-            let min_fc = d3.min(log_fold_changes.map(d=> Number(d)))
+            let filter_res = this.h.filter_comparison_data(
+                this.all_data, 
+                base_treatment, 
+                stim_treatment, 
+                base_run, 
+                stim_run, 
+                selected_motif, 
+                this.globalApplicationState.min_RNA, 
+                this.globalApplicationState.min_DNA)
+
+            let selected_data = filter_res[0]
+            let max_statistic = filter_res[2]
+            let min_statistic = filter_res[3]
+            let max_fc = filter_res[4]
+            let min_fc = filter_res[5]
             this.max_abs_fc = d3.max([max_fc, -1*min_fc])
 
-
-            let max_pval = d3.max(selected_data.map(d => +d[statistic_name]))
-            let min_pval = d3.min(selected_data.map(d => +d[statistic_name]))
-
-
-
-            console.log("max_pval", max_pval)
-            console.log("min_pval", min_pval)
-            console.log("-(.8*max_pval)", -(.8*max_pval))
-
-            if (min_pval >= 0){
-                min_pval = 0
-            }
-            else{ //Get the lower quartile
-                min_pval = d3.max([-(.2*max_pval), min_pval])
-            }
-
-
-
-
-            
-
-            
-
-
-            //Cut off anything that will dip below the min pval
-            selected_data = this.all_data.filter(function(d){return d[statistic_name]>=min_pval;})
-
-            if (selected_motif != ""){
-                selected_data = selected_data.filter(function(d){return d.motif == selected_motif})
-            }
-
-            
             this.x_scale = d3.scaleLinear()
             .domain([-1*this.max_abs_fc, this.max_abs_fc])
             .range([this.MARGIN, this.WIDTH - this.MARGIN])
 
             this.y_scale = d3.scaleLinear()
-            .domain([min_pval, max_pval])
+            .domain([min_statistic, max_statistic])
             .range([this.HEIGHT - this.MARGIN, this.MARGIN])
 
             this.x_axis.selectAll('g').remove()
@@ -271,10 +257,10 @@ class Volcano{
             .append('line')
             .style("stroke", this.FDR_LINE_COLOR)
             .style("stroke-width", 2)
-            .attr("x1", this.x_scale(-1*this.max_abs_fc))
-            .attr("y1", this.y_scale(fdr_threshold))
+            .attr("x1", this.x_scale(-1*this.max_abs_fc)) 
+            .attr("y1", this.y_scale(statistic_threshold))
             .attr("x2", this.x_scale(this.max_abs_fc))
-            .attr("y2", this.y_scale(fdr_threshold)); 
+            .attr("y2", this.y_scale(statistic_threshold)); 
 
             this.points
                 .selectAll('circle')
@@ -356,11 +342,9 @@ class Volcano{
                     .style("top", "-300px")
                   })
                   .on("click", (event, d) => {
+                    console.log(d)
                     that.info.click(d)
                   })
-
-       
-
         }
 
         else{
