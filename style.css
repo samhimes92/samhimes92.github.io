@@ -3,16 +3,22 @@ General Div Layout
 */
 .parent-div {
     display: flex;
+
 }
 .child-div {
-    flex: 1;
-    /* /* border: 2px solid red; */
-    border-radius: 10px;  
+    /* flex: 1; */
+   /* border: 2px solid red;  */
+    border-radius: 10px; 
 }  
 .right-column {
     display: flex;
     flex-direction: column;
     width: 50%;
+    /* flex: 0;  */
+    min-width: 800px; /* Set a minimum width */
+    max-width: 50%; /* Set a maximum width as a percentage */
+
+
     /* margin-left: 20px; */
 }
 .left-column {
@@ -73,7 +79,7 @@ Show top 5 check and label
     left: 480px;
 }
 #number_selector{
-    position: absolute;
+    position: relative;
     top: 120px;
     left: 580px;
     width: 50px;
@@ -86,7 +92,7 @@ Number DNA/RNA barcodes slider
 .track {
     fill: none;
     stroke: #ccc; 
-    stroke-width: 25px; 
+    stroke-width: 40px; 
 }
 .track-inset {
     fill: none;
@@ -148,26 +154,28 @@ Copy buttons
 /* 
 Condition search bars
 */
+#searchBarBase{
+    position: absolute;
+    top: 100px;
+    left: 450px;
+}
 #search_bar_base_label{
     position: absolute;
     top: 75px;
-    left: 650px;
+    left: 450px;
 }
 #search_bar_stim_label{
     position: absolute;
     top: 75px;
-    left: 300px;
-}
-#searchBarBase{
-    position: absolute;
-    top: 100px;
-    left: 650px;
+    left: 150px;
 }
 #searchBarStim{
     position: absolute;
     top: 100px;
-    left: 300px;
+    left: 150px;
 }
+
+
 
 /* 
 Information
@@ -178,6 +186,8 @@ Information
 
 #info-div {
     position: relative;
+    /* border: 2px solid red; */
+
 }
 
 .info-tooltip {

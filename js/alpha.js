@@ -80,12 +80,31 @@ class Alpha{
 
         this.bases = []
         this.stims = []
-        let counter = 0 
 
         for (let i = 0; i < this.globalApplicationState.base_treatments.length; i++) {
-            counter = counter + 1
-            let curBase = this.globalApplicationState.base_treatments[i] + "\t(" + this.globalApplicationState.base_runs[i] + ")"
-            let curStim = this.globalApplicationState.stim_treatments[i] + "\t(" + this.globalApplicationState.stim_runs[i] + ")"
+
+            // Ids used in the global application state maps for mapping short names to long names and visa versa
+            let base_id = this.globalApplicationState.base_treatments[i] + "||" + this.globalApplicationState.base_runs[i]
+            let stim_id = this.globalApplicationState.stim_treatments[i] + "||" + this.globalApplicationState.stim_runs[i]
+
+            // let curBase = this.globalApplicationState.base_treatments[i] + "\t(" + this.globalApplicationState.base_runs[i] + ")"
+            // let curStim = this.globalApplicationState.stim_treatments[i] + "\t(" + this.globalApplicationState.stim_runs[i] + ")"
+        
+
+            let curBase = this.globalApplicationState.display_name_map.get(base_id)
+            let curStim = this.globalApplicationState.display_name_map.get(stim_id)
+
+
+
+            // try {
+            //     curBase = this.globalApplicationState.short_to_long_map.get(base_id).split("||")[0] + "\t(" + this.globalApplicationState.base_runs[i] + ")"
+            //   } catch (error) {
+            //   }
+            // try {
+            //     curStim = this.globalApplicationState.short_to_long_map.get(stim_id).split("||")[0] + "\t(" + this.globalApplicationState.stim_runs[i] + ")"
+            // } catch (error) {
+            // }
+
             this.stims.push(curStim)
             this.bases.push(curBase)
 
@@ -117,7 +136,6 @@ class Alpha{
 
         const that = this
           
-
         document.getElementById('control_check').addEventListener('change', function(){
 
         const isChecked = d3.select(this).property("checked");
@@ -173,7 +191,7 @@ class Alpha{
         document.getElementById('searchBarStim').addEventListener('change', function(){
 
             var selectedOption = d3.select(this).property("value")
-   
+
             if (!that.stims.includes(selectedOption)){
                 that.globalApplicationState.stimulated = null
             }
@@ -186,7 +204,6 @@ class Alpha{
             that.info.updateSearchOptions()
             d3.select("#control_check").property('checked', false)
             d3.select("#top_check").property('checked', false)
-
 
         })
         document.getElementById('searchBarStim').addEventListener('click', function(){
@@ -345,11 +362,31 @@ class Alpha{
                 .selectAll('circle')
                 .remove()
 
-            let base_run = this.globalApplicationState.base.split("\t(")[1].replace(")", "")
-            let base_treatment = this.globalApplicationState.base.split("\t(")[0]
+            let base_display_name = this.globalApplicationState.base
+            let stim_display_name = this.globalApplicationState.stimulated
 
-            let stim_run = this.globalApplicationState.stimulated.split("\t(")[1].replace(")", "")
-            let stim_treatment = this.globalApplicationState.stimulated.split("\t(")[0]
+         
+            let base_id = this.globalApplicationState.display_name_map.revGet(base_display_name)
+            let stim_id = this.globalApplicationState.display_name_map.revGet(stim_display_name)
+
+
+            console.log("YO")
+            console.log("base_id", base_id)
+            console.log("stim_id", stim_id)
+
+            let base_run = base_id.split("||")[1]
+            let base_treatment = base_id.split("||")[0]
+
+            console.log("base_run", base_run)
+            console.log("base_treatment", base_treatment)
+
+            let stim_run = stim_id.split("||")[1]
+            let stim_treatment = stim_id.split("||")[0]
+
+            console.log("stim_run", stim_run)
+            console.log("stim_treatment", stim_treatment)
+
+           
 
             this.stim_name = "alpha__"+stim_treatment+"__"+stim_run
             this.base_name = "alpha__"+base_treatment+"__"+base_run
@@ -358,8 +395,8 @@ class Alpha{
             this.n_rna_base_name = "RNA_barcodes__" +base_treatment+"__"+base_run
 
 
-            d3.select("#base_text").text("Basal Alpha "+base_treatment + " ("+ base_run +")")
-            d3.select("#stim_text").text("Stimulated Alpha "+stim_treatment + " ("+ stim_run +")")
+            d3.select("#base_text").text("Basal Alpha: "+base_display_name.split("(")[0])
+            d3.select("#stim_text").text("Stimulated Alpha: "+stim_display_name.split("(")[0])
 
             this.globalApplicationState.selected_comparison = base_treatment+"__"+base_run+"_vs_"+stim_treatment+"__"+stim_run
 

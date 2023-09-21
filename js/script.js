@@ -19,12 +19,23 @@ let scaleColor = d3.scaleOrdinal()
   "#FFB000" 
 ]);
 
-// import * as helper from './helper.js';     
 
-
-
-
-
+class TwoWayMap {
+  constructor() {
+     this.map = {}; // Initialize an empty object as the map
+     this.reverseMap = {};
+  }
+  get(key) { return this.map[key]; }
+  revGet(key) { return this.reverseMap[key]; }
+  set(key, value) { 
+     this.map[key] = value; 
+     this.reverseMap[value] = key;
+  }
+  unset(key) { 
+     delete this.reverseMap[this.map[key]]; // Remove the reverse mapping
+     delete this.map[key];
+  }
+}
 const globalApplicationState = {
     brushed_data: [],
     brushed: false,
@@ -39,16 +50,21 @@ const globalApplicationState = {
     selected_motif: "none",
     scaleColor: scaleColor,
     min_RNA: 2,
-    min_DNA: 2
+    min_DNA: 2,
+    concentration_map: new Map(),
+    time_map: new Map(),
+    cell_map: new Map(),
+    long_name_map: new Map(),
+    display_name_map: new TwoWayMap(), //display_name takes shortname||treatment                                         
+
+
   };
 
 
 
 let all_data = d3.csv("./data/current_runs.csv")
 let sequences = d3.csv("./data/sequences.csv")
-
-console.log("After reading data")
-console.log("all_data", all_data)
+let meta_data = d3.csv("./data/current_runs_meta_data.csv")
 
 let tooltip = d3.select("body")
   .attr("id", "tooltip")
@@ -59,22 +75,41 @@ let tooltip = d3.select("body")
   .style("position", "absolute")
 
 
-Promise.all([all_data, sequences]).then( data =>
-    {
 
-      // console.log("t2", t)
-        console.log("all data", data[0])
+
+Promise.all([all_data, sequences, meta_data]).then( data =>
+    {
+        // console.log("all data", data[0])
+        // console.log("meta_data", data[2])
+
+        for (let i=0; i<data[2].length; i++){
+          // console.log("data[2][i]", data[2][i])
+          // console.log("data[2][i][treatment]", data[2][i]["treatment"])
+
+          let id = data[2][i]["treatment"] + "||" + data[2][i]["run_name"]
+          let cur_time = data[2][i]["time"]
+          let cur_cell_type = data[2][i]["cell_type"]
+          let cur_long_name = data[2][i]["long_name"]
+          let cur_concentration = data[2][i]["concentration"]
+
+          globalApplicationState.concentration_map.set(id, cur_concentration)
+          globalApplicationState.time_map.set(id, cur_time)
+          globalApplicationState.cell_map.set(id, cur_cell_type)
+          globalApplicationState.long_name_map.set(id, cur_long_name)
+
+        }
+
         let columns = Object.keys(data[0][0])
 
+        //Get all the base and stim treatments that were involved in a comparison
+        var base_runs = []
+        var base_treatments = []
+        var stim_runs = []
+        var stim_treatments = []
 
-        let base_runs = []
-        let base_treatments = []
-        let stim_runs = []
-        let stim_treatments = []
         for (let i = 0; i < columns.length; i++) {
           if (columns[i].startsWith("logFC__")){
             let cur_comp = columns[i]
-            console.log("CUR COMP", cur_comp)
 
             cur_comp = cur_comp.replace("logFC__", "")
             cur_comp = cur_comp.replace(".csv", "")
@@ -97,9 +132,44 @@ Promise.all([all_data, sequences]).then( data =>
           }
         }
 
-           
-        // console.log("Here I am")
-        // console.log(helper.test())
+    // var display_name = new TwoWayMap()//display_name takes shortname||treatment                                         
+
+    base_runs.forEach((base_run, index) => {
+      let base_treatment = base_treatments[index];
+      let stim_treatment = stim_treatments[index];
+      let stim_run = stim_runs[index];
+
+      let stim_key = stim_treatment+"||"+stim_run
+      let base_key = base_treatment+"||"+base_run
+
+      let display_treatment_stim = stim_treatment
+      let display_treatment_base = base_treatment
+
+      try {
+        if (globalApplicationState.long_name_map.get(stim_key) != undefined && 
+        globalApplicationState.long_name_map.get(stim_key) != "None" &&
+        globalApplicationState.long_name_map.get(stim_key) != ""
+        ){
+          display_treatment_stim = globalApplicationState.long_name_map.get(stim_key)
+        }
+      } catch (error) {
+      }
+
+      try {
+        if (globalApplicationState.long_name_map.get(base_key) != undefined && 
+        globalApplicationState.long_name_map.get(base_key) != "None" &&
+        globalApplicationState.long_name_map.get(base_key) != ""
+        ){
+          display_treatment_base = globalApplicationState.long_name_map.get(base_key)
+        }
+      } catch (error) {
+      }
+
+      let display_stim_name = display_treatment_stim + "\t(" + stim_run + ")"
+      let display_base_name = display_treatment_base + "\t(" + base_run + ")"
+      globalApplicationState.display_name_map.set(stim_key, display_stim_name)
+      globalApplicationState.display_name_map.set(base_key, display_base_name)
+    });
 
         let volcano = new Volcano(data[0], globalApplicationState, helpers)
         let alpha = new Alpha(data[0], globalApplicationState, volcano, helpers)

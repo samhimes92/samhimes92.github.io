@@ -4,10 +4,11 @@ import numpy as np
 
 PATH_TO_PAIRWISE_FILES = "./data/pairwise_res/"
 PATH_TO_EMPIRICAL_FILES = "./data/emp_res/"
+PATH_TO_META_DATA = './data/meta_data/'
 PATH_TO_RESULTS = "./data"
 
+#Get all the pairwise and emperical data
 final_df = pd.DataFrame()
-
 count = 0
 for file_name in os.listdir(PATH_TO_EMPIRICAL_FILES):
     if file_name.endswith(".csv"):
@@ -97,3 +98,16 @@ final_df[['motif', 'not']] = final_df['architecture'].str.split(":", expand=True
 final_df.drop(['not'], axis=1)
 
 final_df.to_csv(f"./{PATH_TO_RESULTS}/current_runs.csv")
+
+#Get all the meta data
+meta_data_dfs = []
+for file_name in os.listdir(PATH_TO_META_DATA):
+    if file_name.endswith(".csv"):
+        cur_path = PATH_TO_META_DATA + file_name
+        cur_csv = pd.read_csv(cur_path)
+        meta_data_dfs.append(cur_csv)
+
+final_meta_data = pd.concat(meta_data_dfs)
+final_meta_data.to_csv(f"./{PATH_TO_RESULTS}/current_runs_meta_data.csv")
+
+

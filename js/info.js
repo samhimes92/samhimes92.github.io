@@ -4,19 +4,31 @@ class Info{
         //**********************************************************************************************
         //                                  CONSTANTS FOR CHART SIZE
         //**********************************************************************************************
-        this.WIDTH = 600
-        this.HEIGHT = 250
+        this.WIDTH = 800
+        this.HEIGHT = 300
         this.NUM_DEC = 2
         this.MARGIN_TEXT_LEFT = 25
         this.MARGIN_TEXT_TOP = 15
         this.MARGIN_BETWEEN_TEXT = 25
         this.TOOL_TIP_TIME_OUT = 500
         this.TOOL_TIP_DELAY = 4000
-        
 
+        this.BASE_COLOR = "#6C4343"
+        this.STIM_COLOR = "#00429d"
+        
         this.SLIDER_MARGIN_LEFT = 25
-        this.RNA_SLIDER_TRANSLATE = 150
-        this.DNA_SLIDER_TRANSLATE = 200
+        this.RNA_SLIDER_TRANSLATE = 155
+        this.DNA_SLIDER_TRANSLATE = 250
+        this.SLIDER_HANDLE_R = 4
+        this.SLIDER_HANDLE_TRANSLATE = 8
+        this.SHIFT_SLIDER_LABEL_RIGHT = 315
+        this.SHIFT_STIM_LABEL_UP = -10
+        this.SHIFT_BASE_LABEL_DOWN = 15
+        this.SHIFT_HANDLE_TEXT_LEFT = -15
+        this.SHIFT_HANDLE_TEXT_DOWN = 5
+
+        this.SLIDER_LABEL_FONT_SIZE = "10px"
+
 
         
         this.globalApplicationState = globalApplicationState
@@ -66,15 +78,14 @@ class Info{
         .attr("y", this.MARGIN_TEXT_TOP + this.MARGIN_BETWEEN_TEXT * 3)
         .attr("x", this.MARGIN_TEXT_LEFT)
         .text("Stimulated Alpha: ")
-        .style('fill', '#00429d')
+        .style('fill', this.STIM_COLOR)
 
         this.infoSvg.append("text")
         .attr("id", "basal_text")
         .attr("y", this.MARGIN_TEXT_TOP + this.MARGIN_BETWEEN_TEXT * 4)
         .attr("x", this.MARGIN_TEXT_LEFT)
         .text("Basal Alpha: ")
-        .style('fill', '#6C4343')
-
+        .style('fill', this.BASE_COLOR)
 
 
 
@@ -83,97 +94,182 @@ class Info{
             .domain([0, 100]) 
             .range([0, 300]);
 
-        // // Create the second slider element
-        // var slider_rna = this.infoSvg
-        //     .append("g")
-        //     .attr("transform", `translate(${this.SLIDER_MARGIN_LEFT},${this.RNA_SLIDER_TRANSLATE})`);
+        var slider_rna = this.infoSvg
+            .append("g")
+            .attr("transform", `translate(${this.SLIDER_MARGIN_LEFT},${this.RNA_SLIDER_TRANSLATE})`);
 
-        // this.rna_dots = this.infoSvg
-        // .append("g")
-        // .attr("transform", `translate(${this.SLIDER_MARGIN_LEFT},${this.RNA_SLIDER_TRANSLATE})`);
+        var rna_slider_text = slider_rna.append("text")
+            .attr("x", this.SHIFT_HANDLE_TEXT_LEFT) 
+            .attr("y", this.SHIFT_HANDLE_TEXT_DOWN)
+            .attr("text-anchor", "middle") 
 
-        // // Add a slider track for the second slider
-        // slider_rna.append("line")
-        //     .attr("class", "track")
-        //     .attr("x1", this.barcode_scale.range()[0])
-        //     .attr("x2", this.barcode_scale.range()[1])
-        //     .select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
-        //     .attr("class", "track-inset")
+        var rna_labels = this.infoSvg
+            .append("g")
+            .attr("transform", `translate(${this.SLIDER_MARGIN_LEFT},${this.RNA_SLIDER_TRANSLATE})`);
+
+        rna_labels.append("text")
+        .attr("y", this.SHIFT_BASE_LABEL_DOWN)
+        .attr("x", this.SHIFT_SLIDER_LABEL_RIGHT)
+        .text("RNA Basal Barcodes")
+        .attr("text-anchor", "left") 
+        .style("font-size", this.SLIDER_LABEL_FONT_SIZE)
+        .attr("fill", this.BASE_COLOR)
+
+        rna_labels.append("text")
+        .attr("y", this.SHIFT_STIM_LABEL_UP)
+        .attr("x", this.SHIFT_SLIDER_LABEL_RIGHT)
+        .text("RNA Stimulated Barcodes")
+        .attr("text-anchor", "left") 
+        .style("font-size", this.SLIDER_LABEL_FONT_SIZE)
+        .attr("fill", this.STIM_COLOR)
+
+
+        // G's for the text displaying number of barcodes
+        this.rna_text = this.infoSvg
+            .append("g")
+            .attr("transform", `translate(${this.SLIDER_MARGIN_LEFT},${this.RNA_SLIDER_TRANSLATE})`);
+        
+        
+        slider_rna.append("line")
+            .attr("class", "track")
+            .attr("x1", this.barcode_scale.range()[0])
+            .attr("x2", this.barcode_scale.range()[1])
+            .select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
+            .attr("class", "track-inset")
        
-        // // Create the handle for the second slider
-        // var handle_rna = slider_rna.insert("circle")
-        //     .attr("class", "handle")
-        //     .attr("r", 4)
-        //     .attr("cx", 8)
+        var handle_rna = slider_rna.insert("circle")
+            .attr("class", "handle")
+            .attr("r", this.SLIDER_HANDLE_R )
+            .attr("cx", this.SLIDER_HANDLE_TRANSLATE)
 
-        // var drag_rna = d3.drag()
-        //     .on("start", function() {
-        //         handle_rna.raise().classed("active", true);
-        //         handle_rna.style("cursor", "grab")
-        //     })
-        //     .on("drag", function(event) {
-        //         var xPos = event.x;
-        //         handle_rna.style("cursor", "grabbing")
-        //         xPos = Math.max(0, Math.min(that.barcode_scale.range()[1], xPos-that.SLIDER_MARGIN_LEFT));
-        //         handle_rna.attr("cx", xPos);
-        //         var sliderValue = that.barcode_scale.invert(xPos);
-        //         that.globalApplicationState.min_RNA = sliderValue
-        //     })
-        //     .on("end", function() {
-        //         handle_rna.style("cursor", "grab")
-        //         d3.select(this).classed("active", false);
-        //         that.alpha.drawAlphaScatter()
-        //         that.volcano.drawVolcano()
+        var drag_rna = d3.drag()
+            .on("start", function() {
+                handle_rna.raise().classed("active", true);
+                handle_rna.style("cursor", "grab")
+            })
+            .on("drag", function(event) {
+                var xPos = event.x;
 
-        //     });
+                handle_rna.style("cursor", "grabbing")
+                xPos = Math.max(0, Math.min(that.barcode_scale.range()[1], xPos-that.SLIDER_MARGIN_LEFT));
+                handle_rna.attr("cx", xPos);
+                var sliderValue = that.barcode_scale.invert(xPos);
+                rna_slider_text.text(Math.ceil(sliderValue)); // You can format the value as needed
+                that.globalApplicationState.min_RNA = sliderValue
+            })
+            .on("end", function() {
+                handle_rna.style("cursor", "grab")
+                d3.select(this).classed("active", false);
+                rna_slider_text.text("");
+                that.alpha.drawAlphaScatter()
+                that.volcano.drawVolcano()
 
-        // slider_rna.call(drag_rna);
+            });
 
-        // // Create the second slider element
-        // var slider_dna = this.infoSvg
-        //     .append("g")
-        //     .attr("transform", `translate(${this.SLIDER_MARGIN_LEFT},${this.DNA_SLIDER_TRANSLATE})`);
+        slider_rna.call(drag_rna);
 
-        // this.dna_dots = this.infoSvg
-        //     .append("g")
-        //     .attr("transform", `translate(${this.SLIDER_MARGIN_LEFT},${this.DNA_SLIDER_TRANSLATE})`);
+        var slider_dna = this.infoSvg
+            .append("g")
+            .attr("transform", `translate(${this.SLIDER_MARGIN_LEFT},${this.DNA_SLIDER_TRANSLATE})`);
+
+        var dna_slider_text = slider_dna.append("text")
+            .attr("x", this.SHIFT_HANDLE_TEXT_LEFT) 
+            .attr("y", this.SHIFT_HANDLE_TEXT_DOWN)
+            .attr("text-anchor", "middle") 
+
+        var dna_labels = this.infoSvg
+        .append("g")
+        .attr("transform", `translate(${this.SLIDER_MARGIN_LEFT},${this.DNA_SLIDER_TRANSLATE})`);
+
+        dna_labels.append("text")
+        .attr("y", this.SHIFT_BASE_LABEL_DOWN)
+        .attr("x", this.SHIFT_SLIDER_LABEL_RIGHT)
+        .text("DNA Basal Barcodes")
+        .attr("text-anchor", "left") 
+        .style("font-size", this.SLIDER_LABEL_FONT_SIZE)
+        .attr("fill", this.BASE_COLOR)
+
+        dna_labels.append("text")
+        .attr("y", this.SHIFT_STIM_LABEL_UP)
+        .attr("x", this.SHIFT_SLIDER_LABEL_RIGHT)
+        .text("DNA Stimulated Barcodes")
+        .attr("text-anchor", "left") 
+        .style("font-size", this.SLIDER_LABEL_FONT_SIZE)
+        .attr("fill", this.STIM_COLOR)
+
+
+        this.dna_text = this.infoSvg
+            .append("g")
+            .attr("transform", `translate(${this.SLIDER_MARGIN_LEFT},${this.DNA_SLIDER_TRANSLATE})`);
     
-        // slider_dna.append("line")
-        //     .attr("class", "track")
-        //     .attr("x1", this.barcode_scale.range()[0])
-        //     .attr("x2", this.barcode_scale.range()[1])
-        //     .select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
-        //     .attr("class", "track-inset")
+    
+        slider_dna.append("line")
+            .attr("class", "track")
+            .attr("x1", this.barcode_scale.range()[0])
+            .attr("x2", this.barcode_scale.range()[1])
+            .select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
+            .attr("class", "track-inset")
 
-
-        // // Create the handle for the second slider
-        // var handle_dna = slider_dna.insert("circle")
-        //     .attr("class", "handle")
-        //     .attr("r", 4)
-        //     .attr("cx", 8)
+        var handle_dna = slider_dna.insert("circle")
+            .attr("class", "handle")
+            .attr("r", this.SLIDER_HANDLE_R)
+            .attr("cx", this.SLIDER_HANDLE_TRANSLATE)
             
-        // var drag_dna = d3.drag()
-        //     .on("start", function() {
-        //         handle_dna.raise().classed("active", true);
-        //         handle_dna.style("cursor", "grab")
-        //     })
-        //     .on("drag", function(event) {
-        //         var xPos = event.x;
-        //         handle_dna.style("cursor", "grabbing")
-        //         xPos = Math.max(0, Math.min(that.barcode_scale.range()[1], xPos-that.SLIDER_MARGIN_LEFT));
-        //         handle_dna.attr("cx", xPos);
-        //         var sliderValue = that.barcode_scale.invert(xPos);
-        //         that.globalApplicationState.min_DNA = sliderValue
-        //     })
-        //     .on("end", function() {
-        //         handle_dna.style("cursor", "grab")
-        //         d3.select(this).classed("active", false);
-        //         that.alpha.drawAlphaScatter()
-        //         that.volcano.drawVolcano()
+        var drag_dna = d3.drag()
+            .on("start", function() {
+                handle_dna.raise().classed("active", true);
+                handle_dna.style("cursor", "grab")
+            })
+            .on("drag", function(event) {
+                var xPos = event.x;
+                handle_dna.style("cursor", "grabbing")
+                xPos = Math.max(0, Math.min(that.barcode_scale.range()[1], xPos-that.SLIDER_MARGIN_LEFT));
+                handle_dna.attr("cx", xPos);
+                var sliderValue = that.barcode_scale.invert(xPos);
+                dna_slider_text.text(Math.ceil(sliderValue)); // You can format the value as needed
 
-        //     });
+                that.globalApplicationState.min_DNA = sliderValue
+            })
+            .on("end", function() {
+                handle_dna.style("cursor", "grab")
+                d3.select(this).classed("active", false);
+                dna_slider_text.text(""); // You can format the value as needed
+                that.alpha.drawAlphaScatter()
+                that.volcano.drawVolcano()
 
-        // slider_dna.call(drag_dna);
+
+            });
+
+        slider_dna.call(drag_dna);
+
+        var numTicks = 10; // You can adjust this based on your needs
+        var tickSpacing = 10; // Adjust this based on your data
+
+        // Create the scale group
+        var sliderScale = this.infoSvg
+        .append("g")
+        .attr("transform", `translate(${this.SLIDER_MARGIN_LEFT},${this.RNA_SLIDER_TRANSLATE})`);
+
+        // Generate tick marks using a loop
+        for (var i = 0; i <= numTicks; i++) {
+            var xPos = this.barcode_scale(i * tickSpacing);
+
+            sliderScale.append("line")
+                .attr("x1", xPos)
+                .attr("x2", xPos)
+                .attr("y1", 20)
+                .attr("y2", this.DNA_SLIDER_TRANSLATE - this.RNA_SLIDER_TRANSLATE - 20)
+                .style("stroke", "white")
+                .style("stroke-width", "2px")
+
+            sliderScale.append("text")
+                .attr("x", xPos)
+                .attr("y", (this.DNA_SLIDER_TRANSLATE - this.RNA_SLIDER_TRANSLATE)/2)
+                .attr("text-anchor", "middle") // Center the text horizontally
+                .text(i*tickSpacing)
+                .style("font-size", "12px")
+
+        }
 
 
         const that = this
@@ -424,13 +520,15 @@ class Info{
         let n_dna_stim_name = "DNA_barcodes__" +stim_treatment+"__"+stim_run
         let n_dna_base_name = "DNA_barcodes__" +base_treatment+"__"+base_run
 
-        this.draw_barcode_n(row[n_rna_stim_name], row[n_rna_base_name])
+        this.draw_barcode_n(row[n_rna_stim_name], row[n_rna_base_name], row[n_dna_stim_name], row[n_dna_base_name] )
 
         this.globalApplicationState.selected_motif = row.architecture.split(":")[0]
         this.searchBar.value = row.architecture.split(":")[0]
         
         this.infoSvg.select("#architecture_text").text("Architecture: " + row.architecture)
-        this.infoSvg.select("#fdr_text").text("FDR: " + row[fdr_name])
+        // this.infoSvg.select("#fdr_text").text("FDR: " + (+row[fdr_name]).toFixed(this.NUM_DEC))
+        this.infoSvg.select("#fdr_text").text("FDR: " + (+row[fdr_name]))
+
         this.infoSvg.select("#fc_text").text("Log 2 Fold Change: " + (+row[fc_name]).toFixed(this.NUM_DEC))
         this.infoSvg.select("#basal_text").text("Basal Alpha: " + (+row[base_alpha_name]).toFixed(this.NUM_DEC))
         this.infoSvg.select("#stimulated_text").text("Stimulated Alpha: " + (+row[stim_alpha_name]).toFixed(this.NUM_DEC))
@@ -446,23 +544,49 @@ class Info{
         this.selected_architecture = "none"
     }
 
-    draw_barcode_n(n_rna_stim, n_rna_base){
-        this.barcode_scale(n_rna_stim)
-        this.barcode_scale(n_rna_base)
+    draw_barcode_n(n_rna_stim, n_rna_base,n_dna_stim, n_dna_base){
+ 
+        // this.rna_dots.selectAll("circle").remove()
+        this.rna_text.selectAll("text").remove()
+        this.dna_text.selectAll("text").remove()
 
-        this.rna_dots.selectAll("circle").remove()
 
-        this.rna_dots.append("circle")
-        .attr('r', '4')
-        .attr("cx", this.barcode_scale(n_rna_base))
-        .attr("cy", 8)
-        .attr("fill", '#6C4343')
+        this.rna_text.append("text")
+        .attr("x", this.barcode_scale(n_rna_base))
+        .attr("y", 12)
+        .attr("dy", "0.3em") 
+        .attr("fill", this.BASE_COLOR)
+        .text(Math.floor(n_rna_base))
+        .attr("text-anchor", "middle") 
+        .style("font-size", "14px")
 
-        this.rna_dots.append("circle")
-        .attr('r', '4')
-        .attr("cx", this.barcode_scale(n_rna_stim))
-        .attr("cy", -8)
-        .attr("fill", '#00429d')
+        this.rna_text.append("text")
+        .attr("x", this.barcode_scale(n_rna_stim))
+        .attr("y", -12)
+        .attr("dy", "0.3em") 
+        .attr("fill", this.STIM_COLOR)
+        .text(Math.floor(n_rna_stim))
+        .attr("text-anchor", "middle")
+        .style("font-size", "14px") 
+
+
+        this.dna_text.append("text")
+        .attr("x", this.barcode_scale(n_dna_base))
+        .attr("y", 12)
+        .attr("dy", "0.3em") 
+        .attr("fill", this.BASE_COLOR)
+        .text(Math.floor(n_dna_base))
+        .attr("text-anchor", "middle") 
+        .style("font-size", "14px")
+
+        this.dna_text.append("text")
+        .attr("x", this.barcode_scale(n_dna_stim))
+        .attr("y", -12)
+        .attr("dy", "0.3em") 
+        .attr("fill", this.STIM_COLOR)
+        .text(Math.floor(n_dna_stim))
+        .attr("text-anchor", "middle")
+        .style("font-size", "14px") 
 
 
 

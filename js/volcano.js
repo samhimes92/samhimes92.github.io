@@ -41,10 +41,17 @@ class Volcano{
 
         this.volcano_div = d3.select("#volcano-div") 
     
-        this.volcanoSvg = this.volcano_div.append("svg")
+        
+
+
+
+
+
+this.volcanoSvg = this.volcano_div.append("svg")
         .attr('id', 'volcano_svg')
         .attr('width', this.WIDTH + 75)
         .attr('height', this.HEIGHT)
+
        
 
         //**********************************************************************************************
@@ -181,11 +188,35 @@ class Volcano{
                 .selectAll('line')
                 .remove()
 
-            let base_run = this.globalApplicationState.base.split("\t(")[1].replace(")", "")
-            let base_treatment = this.globalApplicationState.base.split("\t(")[0]
+            let base_display_name = this.globalApplicationState.base
+            let stim_display_name = this.globalApplicationState.stimulated
 
-            let stim_run = this.globalApplicationState.stimulated.split("\t(")[1].replace(")", "")
-            let stim_treatment = this.globalApplicationState.stimulated.split("\t(")[0]
+            let base_id = this.globalApplicationState.display_name_map.revGet(base_display_name)
+            let stim_id = this.globalApplicationState.display_name_map.revGet(stim_display_name)
+
+            let base_run = base_id.split("||")[1]
+            let base_treatment = base_id.split("||")[0]
+
+            let stim_run = stim_id.split("||")[1]
+            let stim_treatment = stim_id.split("||")[0]
+
+            console.log("YO")
+            console.log("stim_run", stim_run)
+            console.log("stim_treatment", stim_treatment)
+
+
+
+
+            // let stim_run = this.globalApplicationState.stimulated.split("\t(")[1].replace(")", "")
+            // let stim_treatment = this.globalApplicationState.stimulated.split("\t(")[0]
+
+
+            // let base_run = this.globalApplicationState.base.split("\t(")[1].replace(")", "")
+            // let base_treatment = this.globalApplicationState.base.split("\t(")[0]
+
+            // let stim_run = this.globalApplicationState.stimulated.split("\t(")[1].replace(")", "")
+            // let stim_treatment = this.globalApplicationState.stimulated.split("\t(")[0]
+
 
        
             let logFC_col = "logFC__"+this.globalApplicationState.selected_comparison
@@ -342,7 +373,6 @@ class Volcano{
                     .style("top", "-300px")
                   })
                   .on("click", (event, d) => {
-                    console.log(d)
                     that.info.click(d)
                   })
         }
