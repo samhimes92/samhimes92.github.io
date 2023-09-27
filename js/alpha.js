@@ -94,17 +94,6 @@ class Alpha{
             let curBase = this.globalApplicationState.display_name_map.get(base_id)
             let curStim = this.globalApplicationState.display_name_map.get(stim_id)
 
-
-
-            // try {
-            //     curBase = this.globalApplicationState.short_to_long_map.get(base_id).split("||")[0] + "\t(" + this.globalApplicationState.base_runs[i] + ")"
-            //   } catch (error) {
-            //   }
-            // try {
-            //     curStim = this.globalApplicationState.short_to_long_map.get(stim_id).split("||")[0] + "\t(" + this.globalApplicationState.stim_runs[i] + ")"
-            // } catch (error) {
-            // }
-
             this.stims.push(curStim)
             this.bases.push(curBase)
 
@@ -177,7 +166,6 @@ class Alpha{
             d3.select("#control_check").property('checked', false)
             that.drawAlphaScatter()
             that.points.selectAll("circle")
-                // .style("opacity", d => (+d[that.max_rank_name] <= 5) )
                 .filter(d => +d[that.max_rank_name] > n | d[that.max_rank_name] == "")
                 .remove();
         } 
@@ -185,6 +173,7 @@ class Alpha{
             that.drawAlphaScatter()
         }
       });
+
 
 
         // d3.select("#searchBarStim").on("change", function(d) {
@@ -535,6 +524,8 @@ class Alpha{
 
 
     }
+
+      
 
     filter_options(option, selected_searchbar){
         const that = this

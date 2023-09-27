@@ -5,7 +5,7 @@ class Volcano{
         //                                  CONSTANTS FOR CHART SIZE
         //**********************************************************************************************
         this.WIDTH = 650 //500
-        this.HEIGHT = 800
+        this.HEIGHT = 700
         this.MARGIN = 55
         this.DEFAULT_VOLCANO_OPACITY = .7
         this.DEFAULT_STROKE_WIDTH = .2
@@ -51,8 +51,7 @@ this.volcanoSvg = this.volcano_div.append("svg")
         .attr('id', 'volcano_svg')
         .attr('width', this.WIDTH + 75)
         .attr('height', this.HEIGHT)
-
-       
+        .attr("transform", `translate(0,${100})`)
 
         //**********************************************************************************************
         //                                  GET MIN AND MAX
@@ -66,15 +65,15 @@ this.volcanoSvg = this.volcano_div.append("svg")
         //                                   LABELS
         //**********************************************************************************************
 
-        this.volcanoSvg.append("text").attr("x",640).attr("y",700).text("FDR = .05").style("font-size", "15px").attr("alignment-baseline","middle")
+        this.volcanoSvg.append("text").attr("x",640).attr("y",600).text("FDR = .05").style("font-size", "15px").attr("alignment-baseline","middle")
         this.volcanoSvg
             .append('line')
             .style("stroke", this.FDR_LINE_COLOR)
             .style("stroke-width", 4)
             .attr("x1", 615)
-            .attr("y1",695)
+            .attr("y1",595)
             .attr("x2", 635)
-            .attr("y2", 695); 
+            .attr("y2", 595); 
 
         this.volcanoSvg
         .append("text")

@@ -41,47 +41,50 @@ Show top 5 check and label
 #searchBar{
     position: absolute;
     top: 15px;
-    left: 450px;
+    left: 500px;
     cursor: text;
 }
 #filter_button{
     position: absolute;
     top: 45px;
-    left: 450px;
+    left: 500px;
     cursor: pointer;
 }
 #show_button{
     position: absolute;
     top: 70px;
-    left: 450px;
+    left: 500px;
     cursor: pointer;
 }
 #control_check{
     position: absolute;
     top: 100px;
-    left: 450px;
+    left: 500px;
     cursor: pointer;
 }
 #control_check_label{
     position: absolute;
     top: 100px;
-    left: 480px;
+    left: 530px;
+    font-size: medium;
 }
 #top_check{
     position: absolute;
     top: 120px;
-    left: 450px;
+    left: 500px;
     cursor: pointer;
 }
 #top_check_label{
     position: absolute;
     top: 120px;
-    left: 480px;
+    left: 530px;
+    font-size: medium;
+
 }
 #number_selector{
-    position: relative;
+    position: absolute;
     top: 120px;
-    left: 580px;
+    left: 645px;
     width: 50px;
     cursor: text;
 }
@@ -134,20 +137,20 @@ Copy buttons
 #copy-button{
     position: absolute;
     top: 160px;
-    left: 450px;
+    left: 500px;
     cursor: pointer;
 
 }
 #copy-button-top{
     position: absolute;
     top: 190px;
-    left: 450px;
+    left: 500px;
     cursor: pointer;
 }
 #copy-button-bottom{
     position: absolute;
     top: 190px;
-    left: 565px;
+    left: 615px;
     cursor: pointer;
 }
 
@@ -156,23 +159,30 @@ Condition search bars
 */
 #searchBarBase{
     position: absolute;
-    top: 100px;
-    left: 450px;
+    top: 150px;
+    left: 50px;
 }
 #search_bar_base_label{
     position: absolute;
-    top: 75px;
-    left: 450px;
+    top: 135px;
+    left: 50px;
+    font-size: 12px;
+    font-weight: bold;
 }
 #search_bar_stim_label{
     position: absolute;
     top: 75px;
-    left: 150px;
+    left: 50px;
+    font-size: 12px;
+    font-weight: bold;
 }
 #searchBarStim{
     position: absolute;
-    top: 100px;
-    left: 150px;
+    top: 90px;
+    left: 50px;
+    font-size: 100%;
+
+
 }
 
 
