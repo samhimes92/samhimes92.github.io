@@ -51,7 +51,7 @@ this.volcanoSvg = this.volcano_div.append("svg")
         .attr('id', 'volcano_svg')
         .attr('width', this.WIDTH + 75)
         .attr('height', this.HEIGHT)
-        .attr("transform", `translate(0,${100})`)
+        .attr("transform", `translate(0,${150})`)
 
         //**********************************************************************************************
         //                                  GET MIN AND MAX
