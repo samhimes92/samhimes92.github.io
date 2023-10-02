@@ -324,7 +324,7 @@ class Info{
             console.log(event.pageX)
             d3.select(".tooltip")
                 .html("Toggle on to see negative controls.<br><br>Negative controls include <br>Spacer and Scramble architectures.")
-                .style("right", `${event.pageX -300}px`)
+                .style("left", `${event.pageX +30}px`)
 
                 .style("top", `${event.pageY - 80}px`)
                 .transition()
@@ -333,7 +333,7 @@ class Info{
           })
           .on("mousemove", (event, d) => {
             d3.select(".tooltip")
-              .style("right", `${event.pageX  -300}px`)
+              .style("left", `${event.pageX  +30}px`)
 
               .style("top", `${event.pageY - 80}px`)
           })
@@ -349,7 +349,7 @@ class Info{
                 .html("Toggle on to see top N motifs.<br><br>The top group had the motif with the<br>highest absolute log 2 fold change.\
                 <br>The second group had the motif with the<br>second highest absolute log 2 fold change. \
                 <br>etc.")
-                .style("left", `${event.pageX -300}px`)
+                .style("left", `${event.pageX +30}px`)
                 .style("top", `${event.pageY - 10}px`)
                 .transition()
                 .delay(this.TOOL_TIP_DELAY)
@@ -357,7 +357,7 @@ class Info{
           })
           .on("mousemove", (event, d) => {
             d3.select(".tooltip")
-              .style("left", `${event.pageX -300}px`)
+              .style("left", `${event.pageX +30}px`)
               .style("top", `${event.pageY - 10}px`)
           })
           .on("mouseleave", (event, d) => {
