@@ -11,7 +11,7 @@ class Info{
         this.MARGIN_TEXT_TOP = 15
         this.MARGIN_BETWEEN_TEXT = 25
         this.TOOL_TIP_TIME_OUT = 500
-        this.TOOL_TIP_DELAY = 4000
+        this.TOOL_TIP_DELAY = 40
 
         this.BASE_COLOR = "#6C4343"
         this.STIM_COLOR = "#00429d"
@@ -321,18 +321,21 @@ class Info{
         //***********************************************************************        
         
         d3.selectAll('.control_check_group').on("mouseover", (event, d) => {
+            console.log(event.pageX)
             d3.select(".tooltip")
                 .html("Toggle on to see negative controls.<br><br>Negative controls include <br>Spacer and Scramble architectures.")
-                .style("left", `${event.pageX + 30}px`)
-                .style("top", `${event.pageY - 10}px`)
+                .style("right", `${event.pageX -300}px`)
+
+                .style("top", `${event.pageY - 80}px`)
                 .transition()
                 .delay(this.TOOL_TIP_DELAY)
                 .style("opacity", 1)
           })
           .on("mousemove", (event, d) => {
             d3.select(".tooltip")
-              .style("left", `${event.pageX + 30}px`)
-              .style("top", `${event.pageY - 10}px`)
+              .style("right", `${event.pageX  -300}px`)
+
+              .style("top", `${event.pageY - 80}px`)
           })
           .on("mouseleave", (event, d) => {
             d3.select(".tooltip")
@@ -346,7 +349,7 @@ class Info{
                 .html("Toggle on to see top N motifs.<br><br>The top group had the motif with the<br>highest absolute log 2 fold change.\
                 <br>The second group had the motif with the<br>second highest absolute log 2 fold change. \
                 <br>etc.")
-                .style("left", `${event.pageX + 30}px`)
+                .style("left", `${event.pageX -300}px`)
                 .style("top", `${event.pageY - 10}px`)
                 .transition()
                 .delay(this.TOOL_TIP_DELAY)
@@ -354,7 +357,7 @@ class Info{
           })
           .on("mousemove", (event, d) => {
             d3.select(".tooltip")
-              .style("left", `${event.pageX + 30}px`)
+              .style("left", `${event.pageX -300}px`)
               .style("top", `${event.pageY - 10}px`)
           })
           .on("mouseleave", (event, d) => {
@@ -587,16 +590,7 @@ class Info{
         .text(Math.floor(n_dna_stim))
         .attr("text-anchor", "middle")
         .style("font-size", "14px") 
-
-
-
-        //base
-        // #6C4343
-
-        //stim
-       //.style('fill', '#00429d');
-
-            
+         
 
     }
 

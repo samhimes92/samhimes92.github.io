@@ -64,7 +64,7 @@ class Alpha{
         this.datalistBase = document.createElement("datalist");
         this.datalistBase.id = "searchOptionsBase";
 
-        d3.selectAll('.child-div').style("opacity", this.CHILD_OFF_OPACITY).style("pointer-events", "none")
+        //d3.selectAll('.child-div').style("opacity", this.CHILD_OFF_OPACITY) //.style("pointer-events", "none")
 
         //**********************************************************************************************
         //                                 SELECTORS
@@ -344,7 +344,7 @@ class Alpha{
 
         if (this.globalApplicationState.base != null && this.globalApplicationState.stimulated != null){
 
-            d3.selectAll('.child-div').style("opacity", "1").style("pointer-events", "all")
+            //d3.selectAll('.child-div').style("opacity", "1")//.style("pointer-events", "all")
 
             //Remove everything before drawing again
             this.points
@@ -510,7 +510,7 @@ class Alpha{
         }
 
         else{
-            d3.selectAll('.child-div').style("opacity", this.CHILD_OFF_OPACITY).style("pointer-events", "none")
+            //d3.selectAll('.child-div').style("opacity", this.CHILD_OFF_OPACITY).style("pointer-events", "none")
 
             this.globalApplicationState.selected_comparison = "none"
             this.points

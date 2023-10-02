@@ -13,10 +13,11 @@
     <header>
         <!-- <h1>TRE MPRA VIS</h1> -->
 
-        <button id="treatment_view_button", class="view_button">Treatment Centric View</button>
-        <button id="motif_view_button", class="view_button">Motif Centric View</button>
-
-        <div>
+       
+        <div id="header-div">
+            <button id="treatment_view_button", class="view_button">Treatment Centric View</button>
+            <button id="motif_view_button", class="view_button">Motif Centric View</button>
+    
             <a id="lab_link" href = "https://www.english.biochem.utah.edu/">The English Lab</a>
         
         </div>
@@ -49,14 +50,17 @@
 
                     <input type="checkbox", id="control_check" class="control_check_group">
                     <label for="control_check", id = "control_check_label" class="control_check_group">Highlight Negative Controls</label>
-                    <!-- <input type="range" name="mySlider" id=mySlider min="10" max="100" value="50"> -->
 
                     <input type="checkbox", id="top_check"class="top_check_group">
                     <label for="top_check", id = "top_check_label"class="top_check_group">Highlight Top </label>
                     <input id="number_selector" type="number" placeholder="5..." min="1" max="99"/>
                 </div>
             </div>
-    </div>
+        </div>
+
+        <div id="motif-wrapper-div" class="parent-div">
+           <h1>COMING SOON!</h1>
+        </div>
 </body>
 <script type = "module" src="js/helper.js"></script>
 

@@ -3,6 +3,7 @@ General Div Layout
 */
 .parent-div {
     display: flex;
+    /* position: relative; */
 
 }
 .child-div {
@@ -230,6 +231,9 @@ Information
     border-radius: 5px;
     opacity: 0;
     transition: opacity 0.3s ease;
+    min-width: 200px; /* Set a minimum width */
+    max-width: 600px; /* Set a minimum width */
+
 }
 
 

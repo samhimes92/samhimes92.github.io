@@ -104,7 +104,7 @@ meta_data_dfs = []
 for file_name in os.listdir(PATH_TO_META_DATA):
     if file_name.endswith(".csv"):
         cur_path = PATH_TO_META_DATA + file_name
-        cur_csv = pd.read_csv(cur_path)
+        cur_csv = pd.read_csv(cur_path, dtype="str")
         meta_data_dfs.append(cur_csv)
 
 final_meta_data = pd.concat(meta_data_dfs)

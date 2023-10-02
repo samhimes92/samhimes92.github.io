@@ -74,18 +74,28 @@ let tooltip = d3.select("body")
   .attr("class", "tooltip")
   .style("position", "absolute")
 
+d3.selectAll('#motif-wrapper-div').style("opacity", 0).style("pointer-events", "none")
 
+d3.select("#motif_view_button").on("click", function() {
+  d3.select("#motif-wrapper-div").style("opacity", 1).style("pointer-events", "all")
+  d3.select("#treatment-wrapper-div").style("opacity", 0).style("pointer-events", "none")
+  d3.select("#header-div").style("pointer-events", "all")
+});
 
+d3.select("#treatment_view_button").on("click", function() {
+  d3.select("#treatment-wrapper-div").style("opacity", 1).style("pointer-events", "all")
+  d3.select("#motif-wrapper-div").style("opacity", 0).style("pointer-events", "none")
+  d3.select("#header-div").style("pointer-events", "all")
+});
 
 
 Promise.all([all_data, sequences, meta_data]).then( data =>
     {
-        // console.log("all data", data[0])
-        // console.log("meta_data", data[2])
+      console.log(data[2])
+      console.log(data[0])
 
         for (let i=0; i<data[2].length; i++){
-          // console.log("data[2][i]", data[2][i])
-          // console.log("data[2][i][treatment]", data[2][i]["treatment"])
+    
 
           let id = data[2][i]["treatment"] + "||" + data[2][i]["run_name"]
           let cur_time = data[2][i]["time"]
@@ -178,11 +188,14 @@ Promise.all([all_data, sequences, meta_data]).then( data =>
 
         volcano.set_info(info)
         volcano.set_alpha(alpha)
-
         alpha.set_info(info)
 
 
     });
+
+
+
+
 
 
 
