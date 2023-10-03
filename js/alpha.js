@@ -17,6 +17,12 @@ class Alpha{
         this.TOP_5_RADIUS = 4
         this.ALL_OTHER_RADIUS = 2.5
         this.CHILD_OFF_OPACITY = .3
+        this.LEGEND_CIRCLE_CX = 510
+        this.LEGEND_CIRCLE_CY = 130
+        this.LEGEND_ROW_SEP = 30
+        this.LEGEND_CIRCLE_R = 6.5
+        this.LEGEND_RANK_X = 530
+        this.LEGEND_RANK_Y = 135
 
 
         this.CIRCLE_COLOR = "grey"
@@ -35,25 +41,25 @@ class Alpha{
 
         this.alphaSvg = this.alpha_div.append("svg")
         .attr('id', 'alpha_svg')
-        .attr('width', this.WIDTH + 250)
+        .attr('width', this.WIDTH + 350)
         .attr('height', this.HEIGHT)
 
         this.selected_data = null
 
-        this.alphaSvg.append("circle").attr("cx",510).attr("cy",130).attr("r", 6).attr("stroke", "black").style("fill", this.globalApplicationState.scaleColor(1))
-        this.alphaSvg.append("circle").attr("cx",510).attr("cy",160).attr("r", 6).attr("stroke", "black").style("fill", this.globalApplicationState.scaleColor(2))
-        this.alphaSvg.append("circle").attr("cx",510).attr("cy",190).attr("r", 6).attr("stroke", "black").style("fill", this.globalApplicationState.scaleColor(3))
-        this.alphaSvg.append("circle").attr("cx",510).attr("cy",220).attr("r", 6).attr("stroke", "black").style("fill", this.globalApplicationState.scaleColor(4))
-        this.alphaSvg.append("circle").attr("cx",510).attr("cy",250).attr("r", 6).attr("stroke", "black").style("fill", this.globalApplicationState.scaleColor(5))
+        this.alphaSvg.append("circle").attr("cx",this.LEGEND_CIRCLE_CX ).attr("cy",this.LEGEND_CIRCLE_CY + this.LEGEND_ROW_SEP * 0).attr("r", this.LEGEND_CIRCLE_R).attr("stroke", "black").style("fill", this.globalApplicationState.scaleColor(1))
+        this.alphaSvg.append("circle").attr("cx",this.LEGEND_CIRCLE_CX ).attr("cy",this.LEGEND_CIRCLE_CY + this.LEGEND_ROW_SEP * 1).attr("r", this.LEGEND_CIRCLE_R).attr("stroke", "black").style("fill", this.globalApplicationState.scaleColor(2))
+        this.alphaSvg.append("circle").attr("cx",this.LEGEND_CIRCLE_CX ).attr("cy",this.LEGEND_CIRCLE_CY + this.LEGEND_ROW_SEP * 2).attr("r", this.LEGEND_CIRCLE_R).attr("stroke", "black").style("fill", this.globalApplicationState.scaleColor(3))
+        this.alphaSvg.append("circle").attr("cx",this.LEGEND_CIRCLE_CX ).attr("cy",this.LEGEND_CIRCLE_CY + this.LEGEND_ROW_SEP * 3).attr("r", this.LEGEND_CIRCLE_R).attr("stroke", "black").style("fill", this.globalApplicationState.scaleColor(4))
+        this.alphaSvg.append("circle").attr("cx",this.LEGEND_CIRCLE_CX ).attr("cy",this.LEGEND_CIRCLE_CY + this.LEGEND_ROW_SEP * 4).attr("r", this.LEGEND_CIRCLE_R).attr("stroke", "black").style("fill", this.globalApplicationState.scaleColor(5))
 
         this.alphaSvg.append("text").attr("x",490).attr("y",90).text("Motif Ranking based on").style("font-size", "17px").attr("alignment-baseline","middle")
         this.alphaSvg.append("text").attr("x",490).attr("y",110).text("highest absolute Log2 FC").style("font-size", "17px").attr("alignment-baseline","middle")
 
-        this.alphaSvg.append("text").attr("x",530).attr("y",130).text("1").style("font-size", "15px").attr("alignment-baseline","middle")
-        this.alphaSvg.append("text").attr("x",530).attr("y",160).text("2").style("font-size", "15px").attr("alignment-baseline","middle")
-        this.alphaSvg.append("text").attr("x",530).attr("y",190).text("3").style("font-size", "15px").attr("alignment-baseline","middle")
-        this.alphaSvg.append("text").attr("x",530).attr("y",220).text("4").style("font-size", "15px").attr("alignment-baseline","middle")
-        this.alphaSvg.append("text").attr("x",530).attr("y",250).text("5").style("font-size", "15px").attr("alignment-baseline","middle")
+        this.alphaSvg.append("text").attr("id","legend1").attr("x",this.LEGEND_RANK_X).attr("y",this.LEGEND_RANK_Y + this.LEGEND_ROW_SEP * 0).text("1").style("font-size", "15px").attr("alignment-baseline","middle")
+        this.alphaSvg.append("text").attr("id","legend2").attr("x",this.LEGEND_RANK_X).attr("y",this.LEGEND_RANK_Y + this.LEGEND_ROW_SEP * 1).text("2").style("font-size", "15px").attr("alignment-baseline","middle")
+        this.alphaSvg.append("text").attr("id","legend3").attr("x",this.LEGEND_RANK_X).attr("y",this.LEGEND_RANK_Y + this.LEGEND_ROW_SEP * 2).text("3").style("font-size", "15px").attr("alignment-baseline","middle")
+        this.alphaSvg.append("text").attr("id","legend4").attr("x",this.LEGEND_RANK_X).attr("y",this.LEGEND_RANK_Y + this.LEGEND_ROW_SEP * 3).text("4").style("font-size", "15px").attr("alignment-baseline","middle")
+        this.alphaSvg.append("text").attr("id","legend5").attr("x",this.LEGEND_RANK_X).attr("y",this.LEGEND_RANK_Y + this.LEGEND_ROW_SEP * 4).text("5").style("font-size", "15px").attr("alignment-baseline","middle")
 
 
         this.searchBarStim = document.getElementById("searchBarStim");
@@ -86,10 +92,6 @@ class Alpha{
             // Ids used in the global application state maps for mapping short names to long names and visa versa
             let base_id = this.globalApplicationState.base_treatments[i] + "||" + this.globalApplicationState.base_runs[i]
             let stim_id = this.globalApplicationState.stim_treatments[i] + "||" + this.globalApplicationState.stim_runs[i]
-
-            // let curBase = this.globalApplicationState.base_treatments[i] + "\t(" + this.globalApplicationState.base_runs[i] + ")"
-            // let curStim = this.globalApplicationState.stim_treatments[i] + "\t(" + this.globalApplicationState.stim_runs[i] + ")"
-        
 
             let curBase = this.globalApplicationState.display_name_map.get(base_id)
             let curStim = this.globalApplicationState.display_name_map.get(stim_id)
@@ -345,7 +347,6 @@ class Alpha{
         if (this.globalApplicationState.base != null && this.globalApplicationState.stimulated != null){
 
             //d3.selectAll('.child-div').style("opacity", "1")//.style("pointer-events", "all")
-
             //Remove everything before drawing again
             this.points
                 .selectAll('circle')
@@ -358,25 +359,12 @@ class Alpha{
             let base_id = this.globalApplicationState.display_name_map.revGet(base_display_name)
             let stim_id = this.globalApplicationState.display_name_map.revGet(stim_display_name)
 
-
-            console.log("YO")
-            console.log("base_id", base_id)
-            console.log("stim_id", stim_id)
-
             let base_run = base_id.split("||")[1]
             let base_treatment = base_id.split("||")[0]
 
-            console.log("base_run", base_run)
-            console.log("base_treatment", base_treatment)
-
             let stim_run = stim_id.split("||")[1]
             let stim_treatment = stim_id.split("||")[0]
-
-            console.log("stim_run", stim_run)
-            console.log("stim_treatment", stim_treatment)
-
            
-
             this.stim_name = "alpha__"+stim_treatment+"__"+stim_run
             this.base_name = "alpha__"+base_treatment+"__"+base_run
             this.max_rank_name = "maxRank__" +base_treatment+"__"+base_run+"_vs_"+stim_treatment+"__"+stim_run
@@ -390,7 +378,6 @@ class Alpha{
             this.globalApplicationState.selected_comparison = base_treatment+"__"+base_run+"_vs_"+stim_treatment+"__"+stim_run
 
             const that = this
-
 
             let filter_res = this.h.filter_comparison_data(
                 this.all_data, 
@@ -484,7 +471,7 @@ class Alpha{
                 .on("mouseover", (event, d) => {
                     d3.select(".tooltip")
                       .style("opacity", 1)
-                      .html("Architecture Name: " + d.architecture)
+                      .html(d.architecture)
                       .style("left", `${event.pageX + 30}px`)
                       .style("top", `${event.pageY - 10}px`)
                   })

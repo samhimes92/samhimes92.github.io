@@ -28,7 +28,7 @@ class Info{
         this.SHIFT_HANDLE_TEXT_DOWN = 5
 
         this.SLIDER_LABEL_FONT_SIZE = "10px"
-
+        this.SLIDER_BARCODE_N_FONT_SIZE = "11px"
 
         
         this.globalApplicationState = globalApplicationState
@@ -65,7 +65,7 @@ class Info{
         .attr("id", "fc_text")
         .attr("y", this.MARGIN_TEXT_TOP + this.MARGIN_BETWEEN_TEXT * 1)
         .attr("x", this.MARGIN_TEXT_LEFT)
-        .text("Log 2 Fold Change: ")
+        .text("Log Fold Change: ")
 
         this.infoSvg.append("text")
         .attr("id", "fdr_text")
@@ -102,6 +102,8 @@ class Info{
             .attr("x", this.SHIFT_HANDLE_TEXT_LEFT) 
             .attr("y", this.SHIFT_HANDLE_TEXT_DOWN)
             .attr("text-anchor", "middle") 
+            .attr("font-size",this.SLIDER_BARCODE_N_FONT_SIZE) 
+
 
         var rna_labels = this.infoSvg
             .append("g")
@@ -150,15 +152,15 @@ class Info{
             .on("drag", function(event) {
                 var xPos = event.x;
 
-                handle_rna.style("cursor", "grabbing")
+                // handle_rna.style("cursor", "grabbing")
                 xPos = Math.max(0, Math.min(that.barcode_scale.range()[1], xPos-that.SLIDER_MARGIN_LEFT));
                 handle_rna.attr("cx", xPos);
                 var sliderValue = that.barcode_scale.invert(xPos);
-                rna_slider_text.text(Math.ceil(sliderValue)); // You can format the value as needed
+                rna_slider_text.text(Math.ceil(sliderValue)); 
                 that.globalApplicationState.min_RNA = sliderValue
             })
             .on("end", function() {
-                handle_rna.style("cursor", "grab")
+                // handle_rna.style("cursor", "grab")
                 d3.select(this).classed("active", false);
                 rna_slider_text.text("");
                 that.alpha.drawAlphaScatter()
@@ -175,7 +177,8 @@ class Info{
         var dna_slider_text = slider_dna.append("text")
             .attr("x", this.SHIFT_HANDLE_TEXT_LEFT) 
             .attr("y", this.SHIFT_HANDLE_TEXT_DOWN)
-            .attr("text-anchor", "middle") 
+            .attr("text-anchor", "middle")
+            .attr("font-size",this.SLIDER_BARCODE_N_FONT_SIZE) 
 
         var dna_labels = this.infoSvg
         .append("g")
@@ -222,18 +225,18 @@ class Info{
             })
             .on("drag", function(event) {
                 var xPos = event.x;
-                handle_dna.style("cursor", "grabbing")
+                // handle_dna.style("cursor", "grabbing")
                 xPos = Math.max(0, Math.min(that.barcode_scale.range()[1], xPos-that.SLIDER_MARGIN_LEFT));
                 handle_dna.attr("cx", xPos);
                 var sliderValue = that.barcode_scale.invert(xPos);
-                dna_slider_text.text(Math.ceil(sliderValue)); // You can format the value as needed
+                dna_slider_text.text(Math.ceil(sliderValue)); 
 
                 that.globalApplicationState.min_DNA = sliderValue
             })
             .on("end", function() {
-                handle_dna.style("cursor", "grab")
+                // handle_dna.style("cursor", "grab")
                 d3.select(this).classed("active", false);
-                dna_slider_text.text(""); // You can format the value as needed
+                dna_slider_text.text(""); 
                 that.alpha.drawAlphaScatter()
                 that.volcano.drawVolcano()
 
@@ -346,8 +349,8 @@ class Info{
 
         d3.selectAll('.top_check_group').on("mouseover", (event, d) => {
             d3.select(".tooltip")
-                .html("Toggle on to see top N motifs.<br><br>The top group had the motif with the<br>highest absolute log 2 fold change.\
-                <br>The second group had the motif with the<br>second highest absolute log 2 fold change. \
+                .html("Toggle on to see top N motifs.<br><br>The top group had the motif with the<br>highest absolute log fold change.\
+                <br>The second group had the motif with the<br>second highest absolute log fold change. \
                 <br>etc.")
                 .style("left", `${event.pageX +30}px`)
                 .style("top", `${event.pageY - 10}px`)
@@ -532,7 +535,7 @@ class Info{
         // this.infoSvg.select("#fdr_text").text("FDR: " + (+row[fdr_name]).toFixed(this.NUM_DEC))
         this.infoSvg.select("#fdr_text").text("FDR: " + (+row[fdr_name]))
 
-        this.infoSvg.select("#fc_text").text("Log 2 Fold Change: " + (+row[fc_name]).toFixed(this.NUM_DEC))
+        this.infoSvg.select("#fc_text").text("Log Fold Change: " + (+row[fc_name]).toFixed(this.NUM_DEC))
         this.infoSvg.select("#basal_text").text("Basal Alpha: " + (+row[base_alpha_name]).toFixed(this.NUM_DEC))
         this.infoSvg.select("#stimulated_text").text("Stimulated Alpha: " + (+row[stim_alpha_name]).toFixed(this.NUM_DEC))
         this.selected_architecture = row.architecture
@@ -541,7 +544,7 @@ class Info{
     clear(){
         this.infoSvg.select("#architecture_text").text("Architecture: ")
         this.infoSvg.select("#fdr_text").text("FDR: ")
-        this.infoSvg.select("#fc_text").text("Log 2 Fold Change: ")
+        this.infoSvg.select("#fc_text").text("Log Fold Change: ")
         this.infoSvg.select("#basal_text").text("Basal Alpha: ")
         this.infoSvg.select("#stimulated_text").text("Stimulated Alpha: ")
         this.selected_architecture = "none"

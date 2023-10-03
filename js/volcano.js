@@ -79,7 +79,7 @@ this.volcanoSvg = this.volcano_div.append("svg")
         .append("text")
         .attr("transform","translate(" + this.WIDTH / 2 + " ," + (this.HEIGHT - 10) + ")")
         .style("text-anchor", "middle")
-        .text("Log 2 Fold Change");
+        .text("Log Fold Change");
 
         this.volcanoSvg
         .append("text")
@@ -199,56 +199,12 @@ this.volcanoSvg = this.volcano_div.append("svg")
             let stim_run = stim_id.split("||")[1]
             let stim_treatment = stim_id.split("||")[0]
 
-            console.log("YO")
-            console.log("stim_run", stim_run)
-            console.log("stim_treatment", stim_treatment)
-
-
-
-
-            // let stim_run = this.globalApplicationState.stimulated.split("\t(")[1].replace(")", "")
-            // let stim_treatment = this.globalApplicationState.stimulated.split("\t(")[0]
-
-
-            // let base_run = this.globalApplicationState.base.split("\t(")[1].replace(")", "")
-            // let base_treatment = this.globalApplicationState.base.split("\t(")[0]
-
-            // let stim_run = this.globalApplicationState.stimulated.split("\t(")[1].replace(")", "")
-            // let stim_treatment = this.globalApplicationState.stimulated.split("\t(")[0]
-
-
-       
             let logFC_col = "logFC__"+this.globalApplicationState.selected_comparison
             let statistic_name = "statistic__"+this.globalApplicationState.selected_comparison
             this.max_rank_name = "maxRank__" +this.globalApplicationState.selected_comparison
             this.n_rna_stim_name = "RNA_barcodes__" +stim_treatment+"__"+stim_run
             this.n_rna_base_name = "RNA_barcodes__" +base_treatment+"__"+base_run
             let fdr_name = "fdr__" +this.globalApplicationState.selected_comparison
-
-
-
-            let fdr_vals = this.all_data.map(d => +d[fdr_name] - .05)
-            let below = d3.max(fdr_vals.filter(function(d){return d< 0})) //Gets the higest fdr below .05
-            let above = d3.min(fdr_vals.filter(function(d){return d> 0})) //Gets the lowest fdr above .05
-            let match = fdr_vals.filter(function(d){return d===0})          //Gets a list of fdrs that are exactly .05 (EXTREMELY UNLIKELY)
-            let statistic_threshold = null
-
-            //Sets the statistic_threshold by finding the static values closest to .05
-            //If a fdr value was .05 (if (extremely unlikely)) set the corresponding statistic to the fdr threshold
-            //Otherwise, get the mean of the statistics corresponding to the highest fdr below .05 and the lowest fdr above .05
-            if (match.length != 0){
-                let exact_match = this.all_data.filter(function(d){
-                    return +d[fdr_name] - .05 === 0;
-                })
-                statistic_threshold = exact_match.map(d => d[statistic_name])
-            }
-            else{
-                let above_and_below = this.all_data.filter(function(d){
-                    return +d[fdr_name] - .05 === above || +d[fdr_name] - .05 === below;
-                })
-                statistic_threshold = d3.mean(above_and_below.map(d => d[statistic_name] ))
-            }
-
 
 
             let filter_res = this.h.filter_comparison_data(
@@ -268,6 +224,37 @@ this.volcanoSvg = this.volcano_div.append("svg")
             let min_fc = filter_res[5]
             this.max_abs_fc = d3.max([max_fc, -1*min_fc])
 
+            let fdr_vals = this.all_data.map(d => +d[fdr_name])
+            fdr_vals= fdr_vals.filter(function(d){return d != 0})
+            fdr_vals = fdr_vals.map(d=> d-.05)
+
+            let below = d3.max(fdr_vals.filter(function(d){return d<0})) //Gets the higest fdr below .05
+            let above = d3.min(fdr_vals.filter(function(d){return d>0})) //Gets the lowest fdr above .05
+            let match = fdr_vals.filter(function(d){return d===0})          //Gets a list of fdrs that are exactly .05 (EXTREMELY UNLIKELY)
+            let statistic_threshold = null
+
+            //Sets the statistic_threshold by finding the static values closest to .05
+            //If a fdr value was .05 (if (extremely unlikely)) set the corresponding statistic to the fdr threshold
+            //Otherwise, get the mean of the statistics corresponding to the highest fdr below .05 and the lowest fdr above .05
+            if (match.length != 0){ // If there is an exact match
+                let exact_match = this.all_data.filter(function(d){
+                    return +d[fdr_name] - .05 === 0;
+                })
+                statistic_threshold = exact_match.map(d => d[statistic_name])
+            }
+            else if (below != null & above != null) { // If there is a value above and below .05
+                let above_and_below = this.all_data.filter(function(d){
+                    return +d[fdr_name] - .05 === above || +d[fdr_name] - .05 === below;
+                })
+                statistic_threshold = d3.mean(above_and_below.map(d => d[statistic_name] ))
+            }
+            else if (below == null & above != null){ // If there is no value below .05 set statistic threshold to highest lrt
+                statistic_threshold = max_statistic
+            }
+            else if (below == null & above != null){ // If there is no value above .05 set statistic threshold to lowest lrt
+                statistic_threshold = min_statistic
+            }
+
             this.x_scale = d3.scaleLinear()
             .domain([-1*this.max_abs_fc, this.max_abs_fc])
             .range([this.MARGIN, this.WIDTH - this.MARGIN])
@@ -281,7 +268,6 @@ this.volcanoSvg = this.volcano_div.append("svg")
 
             this.x_axis = this.volcanoSvg.append('g').call(this.xAxis)
             this.y_axis = this.volcanoSvg.append('g').call(this.yAxis)
-
 
             this.line
             .append('line')
@@ -299,8 +285,6 @@ this.volcanoSvg = this.volcano_div.append("svg")
                 .append('circle')
                 .attr('cx', (d)=> this.x_scale(d[logFC_col]))
                 .attr('cy', (d)=> this.y_scale(d[statistic_name]))
-           
-
                 .style('fill', (d)=>{
                     if (selected_motif==""){
                         if(+d[this.max_rank_name] <= 5 & d[this.max_rank_name]!= ""){
@@ -320,7 +304,6 @@ this.volcanoSvg = this.volcano_div.append("svg")
                         return this.CIRCLE_COLOR
                     }
                 })
-              
                 .attr('r', (d) =>{
                     if (selected_motif==""){
                         if (+d[this.max_rank_name] <= 5 & d[this.max_rank_name]!= ""){
@@ -336,8 +319,6 @@ this.volcanoSvg = this.volcano_div.append("svg")
                 })
                 .style('stroke', 'black')
                 .style('stroke-width', this.DEFAULT_STROKE_WIDTH)
-            
-
                 .style('opacity', (d)=>{
                     if (selected_motif==""){
                         if(+d[this.max_rank_name] <= 5 & d[this.max_rank_name]!= ""){
@@ -357,7 +338,7 @@ this.volcanoSvg = this.volcano_div.append("svg")
                 .on("mouseover", (event, d) => {
                     d3.select(".tooltip")
                       .style("opacity", 1)
-                      .html("Architecture Name: " + d.architecture)
+                      .html(d.architecture)
                       .style("left", `${event.pageX + 30}px`)
                       .style("top", `${event.pageY - 10}px`)
                   })
