@@ -49,6 +49,8 @@ const globalApplicationState = {
     selected_comparison: "none",
     selected_motif: "none",
     scaleColor: scaleColor,
+    controls_checked: false,
+    top_5_checked: false,
     min_RNA: 2,
     min_DNA: 2,
     concentration_map: new Map(),

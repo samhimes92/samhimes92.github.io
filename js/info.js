@@ -185,6 +185,10 @@ class Info{
                 console.log("that.globalApplicationState.selected_motif", that.globalApplicationState.selected_motif)
                 that.alpha.drawAlphaScatter(that.globalApplicationState.selected_motif)
                 that.volcano.drawVolcano(that.globalApplicationState.selected_motif)
+                that.alpha.check_negative_controls(false)
+                that.volcano.check_negative_controls(false)
+                that.alpha.check_top_5(false)
+                that.volcano.check_top_5(false)
 
             });
 
@@ -257,6 +261,10 @@ class Info{
                 dna_slider_text.text(""); 
                 that.alpha.drawAlphaScatter(that.globalApplicationState.selected_motif)
                 that.volcano.drawVolcano(that.globalApplicationState.selected_motif)
+                that.alpha.check_negative_controls(false)
+                that.volcano.check_negative_controls(false)
+                that.alpha.check_top_5(false)
+                that.volcano.check_top_5(false)
 
 
             });
@@ -300,32 +308,24 @@ class Info{
         document.getElementById("filter_motif_check").addEventListener("change", function() {
             const isChecked = d3.select(this).property("checked");
             if (isChecked){
-
                 let selected_motif = that.searchBar.value
                 that.alpha.drawAlphaScatter(selected_motif)
                 that.volcano.drawVolcano(selected_motif)
                 d3.select("#control_check").property('checked', false)
                 d3.select("#top_check").property('checked', false)
+                that.globalApplicationState.top_5_checked = false
+                that.globalApplicationState.controls_checked = false
+
             }
             else{
                 that.alpha.drawAlphaScatter()
                 that.volcano.drawVolcano()
-
             }
-
         });
 
+        
+
     
-
-
-        // document.getElementById("filter_button").addEventListener("click", function() {
-        //     let selected_motif = that.searchBar.value
-        //     that.alpha.drawAlphaScatter(selected_motif)
-        //     that.volcano.drawVolcano(selected_motif)
-        //     d3.select("#control_check").property('checked', false)
-        //     d3.select("#top_check").property('checked', false)
-
-        // });
 
         document.getElementById("show_button").addEventListener("click", function() {
             that.alpha.drawAlphaScatter()
@@ -334,8 +334,8 @@ class Info{
             d3.select("#control_check").property('checked', false)
             d3.select("#top_check").property('checked', false)
             d3.select("#filter_motif_check").property('checked', false)
-
-
+            that.globalApplicationState.top_5_checked = false
+            that.globalApplicationState.controls_checked = false
         });
 
         document.getElementById("copy-button").addEventListener("click", function(event) {
@@ -344,6 +344,41 @@ class Info{
                 d3.select(".info-tooltip").style("opacity", 0);
               }, that.TOOL_TIP_TIME_OUT)
         });
+
+        document.getElementById('control_check').addEventListener('change', function(){
+            that.globalApplicationState.controls_checked = d3.select(this).property("checked")
+            if (that.globalApplicationState.controls_checked){
+                d3.select("#top_check").property('checked', false)
+                d3.select("#filter_motif_check").property('checked', false)
+                that.globalApplicationState.top_5_checked = false
+            }
+            that.alpha.check_negative_controls(true)
+            that.volcano.check_negative_controls(true)
+        });
+
+        document.getElementById('top_check').addEventListener('change', function(){
+            that.globalApplicationState.top_5_checked = d3.select(this).property("checked")
+            if (that.globalApplicationState.controls_checked){
+                d3.select("#control_check").property('checked', false)
+                d3.select("#filter_motif_check").property('checked', false)
+                that.globalApplicationState.controls_checked = false
+            }
+            that.alpha.check_top_5(true)
+            that.volcano.check_top_5(true)
+        });
+
+          document.getElementById('number_selector').addEventListener('change', function(){
+            that.alpha.check_top_5()
+            that.volcano.check_top_5()
+          });
+
+
+
+
+
+
+        
+
 
         document.getElementById("copy-button-top").addEventListener("click", function(event) {
             that.copyClicked(event, "primer_top")

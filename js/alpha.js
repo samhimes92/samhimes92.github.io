@@ -127,59 +127,61 @@ class Alpha{
 
         const that = this
           
-        document.getElementById('control_check').addEventListener('change', function(){
+    //     document.getElementById('control_check').addEventListener('change', function(){
+    //         that.globalApplicationState.controls_checked = d3.select(this).property("checked")
 
-        const isChecked = d3.select(this).property("checked");
-        if (isChecked) {
-            d3.select("#top_check").property('checked', false)
-            d3.select("#filter_motif_check").property('checked', false)
+    //         that.check_negative_controls()
+    //     // const isChecked = d3.select(this).property("checked");
+    //     // if (isChecked) {
+    //     //     d3.select("#top_check").property('checked', false)
+    //     //     d3.select("#filter_motif_check").property('checked', false)
 
-            that.drawAlphaScatter()
-            that.points.selectAll("circle")
-                .style("opacity", d => (d.controls === "True" ? 1 : 0))
-                .filter(d => d.controls !== "True")
-                .remove();
-        } 
-        else {
-            that.drawAlphaScatter()
-        }
-      });
-
-
-
-      document.getElementById('number_selector').addEventListener('change', function(){
-        let n = d3.select('#number_selector').property("value") === "" ? 5 : d3.select('#number_selector').property("value")
-        const isChecked = d3.select("#top_check").property("checked");
-        if (isChecked) {
-            d3.select("#control_check").property('checked', false)
-            d3.select("#filter_motif_check").property('checked', false)
-            that.drawAlphaScatter()
-            that.points.selectAll("circle")
-                .filter(d => +d[that.max_rank_name] > n | d[that.max_rank_name] == "")
-                .remove();
-        } 
-        else {
-            that.drawAlphaScatter()
-        }
-      });
+    //     //     that.drawAlphaScatter()
+    //     //     that.points.selectAll("circle")
+    //     //         .style("opacity", d => (d.controls === "True" ? 1 : 0))
+    //     //         .filter(d => d.controls !== "True")
+    //     //         .remove();
+    //     // } 
+    //     // else {
+    //     //     that.drawAlphaScatter()
+    //     // }
+    //   });
 
 
-      document.getElementById('top_check').addEventListener('change', function(){
-        let n = d3.select('#number_selector').property("value") === "" ? 5 : d3.select('#number_selector').property("value")
-        const isChecked = d3.select(this).property("checked");
-        if (isChecked) {
-            d3.select("#control_check").property('checked', false)
-            d3.select("#filter_motif_check").property('checked', false)
 
-            that.drawAlphaScatter()
-            that.points.selectAll("circle")
-                .filter(d => +d[that.max_rank_name] > n | d[that.max_rank_name] == "")
-                .remove();
-        } 
-        else {
-            that.drawAlphaScatter()
-        }
-      });
+    //   document.getElementById('number_selector').addEventListener('change', function(){
+    //     let n = d3.select('#number_selector').property("value") === "" ? 5 : d3.select('#number_selector').property("value")
+    //     const isChecked = d3.select("#top_check").property("checked");
+    //     if (isChecked) {
+    //         d3.select("#control_check").property('checked', false)
+    //         d3.select("#filter_motif_check").property('checked', false)
+    //         that.drawAlphaScatter()
+    //         that.points.selectAll("circle")
+    //             .filter(d => +d[that.max_rank_name] > n | d[that.max_rank_name] == "")
+    //             .remove();
+    //     } 
+    //     else {
+    //         that.drawAlphaScatter()
+    //     }
+    //   });
+
+
+    //   document.getElementById('top_check').addEventListener('change', function(){
+    //     let n = d3.select('#number_selector').property("value") === "" ? 5 : d3.select('#number_selector').property("value")
+    //     const isChecked = d3.select(this).property("checked");
+    //     if (isChecked) {
+    //         d3.select("#control_check").property('checked', false)
+    //         d3.select("#filter_motif_check").property('checked', false)
+
+    //         that.drawAlphaScatter()
+    //         that.points.selectAll("circle")
+    //             .filter(d => +d[that.max_rank_name] > n | d[that.max_rank_name] == "")
+    //             .remove();
+    //     } 
+    //     else {
+    //         that.drawAlphaScatter()
+    //     }
+    //   });
 
 
 
@@ -558,6 +560,36 @@ class Alpha{
         }
 
 
+    }
+
+    check_negative_controls(redraw){
+        if (this.globalApplicationState.controls_checked) {
+            d3.select("#top_check").property('checked', false)
+            d3.select("#filter_motif_check").property('checked', false)
+
+            this.drawAlphaScatter()
+            this.points.selectAll("circle")
+                .style("opacity", d => (d.controls === "True" ? 1 : 0))
+                .filter(d => d.controls !== "True")
+                .remove();
+        } 
+        else if (redraw) {
+            this.drawAlphaScatter()
+        }
+    }
+
+    check_top_5(redraw){
+        let max_rank_name = "maxRank__" +this.globalApplicationState.selected_comparison
+        let n = d3.select('#number_selector').property("value") === "" ? 5 : d3.select('#number_selector').property("value")
+        if (this.globalApplicationState.top_5_checked) {
+            this.drawAlphaScatter()
+            this.points.selectAll("circle")
+                .filter(d => +d[max_rank_name] > n | d[max_rank_name] == "")
+                .remove();
+        } 
+        else if (redraw)  {
+            this.drawAlphaScatter()
+        }
     }
 
     set_info(info){
