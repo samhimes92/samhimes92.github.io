@@ -46,12 +46,28 @@ Show top 5 check and label
     left: 500px;
     cursor: text;
 }
-#filter_button{
+/* #filter_button{
+    position: absolute;
+    top: 45px;
+    left: 500px;
+    cursor: pointer;
+} */
+#filter_motif_check{
     position: absolute;
     top: 45px;
     left: 500px;
     cursor: pointer;
 }
+
+#filter_motif_check_label{
+    position: absolute;
+    top: 45px;
+    left: 530px;
+    cursor: pointer;
+}
+
+
+
 #show_button{
     position: absolute;
     top: 70px;

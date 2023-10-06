@@ -47,11 +47,11 @@ class Volcano{
 
 
 
-this.volcanoSvg = this.volcano_div.append("svg")
-        .attr('id', 'volcano_svg')
-        .attr('width', this.WIDTH + 75)
-        .attr('height', this.HEIGHT)
-        .attr("transform", `translate(0,${150})`)
+        this.volcanoSvg = this.volcano_div.append("svg")
+            .attr('id', 'volcano_svg')
+            .attr('width', this.WIDTH + 75)
+            .attr('height', this.HEIGHT)
+            .attr("transform", `translate(0,${150})`)
 
         //**********************************************************************************************
         //                                  GET MIN AND MAX
@@ -175,7 +175,7 @@ this.volcanoSvg = this.volcano_div.append("svg")
        
     }
 
-    drawVolcano(selected_motif = ""){
+    drawVolcano(selected_motif = "none"){
         const that = this
         if (this.globalApplicationState.selected_comparison != "none"){
 
@@ -286,7 +286,7 @@ this.volcanoSvg = this.volcano_div.append("svg")
                 .attr('cx', (d)=> this.x_scale(d[logFC_col]))
                 .attr('cy', (d)=> this.y_scale(d[statistic_name]))
                 .style('fill', (d)=>{
-                    if (selected_motif==""){
+                    if (selected_motif==="none"){
                         if(+d[this.max_rank_name] <= 5 & d[this.max_rank_name]!= ""){
                             return that.globalApplicationState.scaleColor(+d[this.max_rank_name])
                         }
@@ -305,7 +305,7 @@ this.volcanoSvg = this.volcano_div.append("svg")
                     }
                 })
                 .attr('r', (d) =>{
-                    if (selected_motif==""){
+                    if (selected_motif==="none"){
                         if (+d[this.max_rank_name] <= 5 & d[this.max_rank_name]!= ""){
                             return(this.TOP_5_RADIUS )
                         }
@@ -320,7 +320,7 @@ this.volcanoSvg = this.volcano_div.append("svg")
                 .style('stroke', 'black')
                 .style('stroke-width', this.DEFAULT_STROKE_WIDTH)
                 .style('opacity', (d)=>{
-                    if (selected_motif==""){
+                    if (selected_motif==="none"){
                         if(+d[this.max_rank_name] <= 5 & d[this.max_rank_name]!= ""){
                             return 1
                         }

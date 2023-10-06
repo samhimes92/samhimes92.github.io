@@ -11,7 +11,7 @@ class Info{
         this.MARGIN_TEXT_TOP = 15
         this.MARGIN_BETWEEN_TEXT = 25
         this.TOOL_TIP_TIME_OUT = 500
-        this.TOOL_TIP_DELAY = 40
+        this.TOOL_TIP_DELAY = 1000
 
         this.BASE_COLOR = "#6C4343"
         this.STIM_COLOR = "#00429d"
@@ -30,11 +30,9 @@ class Info{
         this.SLIDER_LABEL_FONT_SIZE = "10px"
         this.SLIDER_BARCODE_N_FONT_SIZE = "11px"
 
-        
         this.globalApplicationState = globalApplicationState
         this.all_data = all_data
         this.sequence_data = sequence_data
-
 
         this.alpha = alpha
         this.volcano = volcano
@@ -86,6 +84,29 @@ class Info{
         .attr("x", this.MARGIN_TEXT_LEFT)
         .text("Basal Alpha: ")
         .style('fill', this.BASE_COLOR)
+
+        var treatment_info = this.infoSvg
+        .append("g")
+        .attr("id", "treatment_info_g")
+        .attr("transform", `translate(${500},${220})`);
+        
+        treatment_info.append("rect")
+        .attr("id", "treatment_info_rect")
+        .attr("width", 250)
+        .attr("height", 40)
+        .attr("fill", "rgb(84, 90, 107)")
+        .attr("rx", 5)
+        .attr("ry", 5)
+
+        treatment_info.append("text")
+        .html("Scroll over to see treatment information")
+        .attr("y", 25)
+        .attr("x", 125)
+        .attr("text-anchor", "middle") 
+        .attr("font-size", "11px")
+        .style('fill', 'white')
+        .attr("font-weight", "bold")
+
 
 
 
@@ -151,8 +172,6 @@ class Info{
             })
             .on("drag", function(event) {
                 var xPos = event.x;
-
-                // handle_rna.style("cursor", "grabbing")
                 xPos = Math.max(0, Math.min(that.barcode_scale.range()[1], xPos-that.SLIDER_MARGIN_LEFT));
                 handle_rna.attr("cx", xPos);
                 var sliderValue = that.barcode_scale.invert(xPos);
@@ -160,11 +179,12 @@ class Info{
                 that.globalApplicationState.min_RNA = sliderValue
             })
             .on("end", function() {
-                // handle_rna.style("cursor", "grab")
                 d3.select(this).classed("active", false);
                 rna_slider_text.text("");
-                that.alpha.drawAlphaScatter()
-                that.volcano.drawVolcano()
+
+                console.log("that.globalApplicationState.selected_motif", that.globalApplicationState.selected_motif)
+                that.alpha.drawAlphaScatter(that.globalApplicationState.selected_motif)
+                that.volcano.drawVolcano(that.globalApplicationState.selected_motif)
 
             });
 
@@ -225,7 +245,6 @@ class Info{
             })
             .on("drag", function(event) {
                 var xPos = event.x;
-                // handle_dna.style("cursor", "grabbing")
                 xPos = Math.max(0, Math.min(that.barcode_scale.range()[1], xPos-that.SLIDER_MARGIN_LEFT));
                 handle_dna.attr("cx", xPos);
                 var sliderValue = that.barcode_scale.invert(xPos);
@@ -234,11 +253,10 @@ class Info{
                 that.globalApplicationState.min_DNA = sliderValue
             })
             .on("end", function() {
-                // handle_dna.style("cursor", "grab")
                 d3.select(this).classed("active", false);
                 dna_slider_text.text(""); 
-                that.alpha.drawAlphaScatter()
-                that.volcano.drawVolcano()
+                that.alpha.drawAlphaScatter(that.globalApplicationState.selected_motif)
+                that.volcano.drawVolcano(that.globalApplicationState.selected_motif)
 
 
             });
@@ -276,20 +294,47 @@ class Info{
 
 
         const that = this
-        document.getElementById("filter_button").addEventListener("click", function() {
-            let selected_motif = that.searchBar.value
-            that.alpha.drawAlphaScatter(selected_motif)
-            that.volcano.drawVolcano(selected_motif)
-            d3.select("#control_check").property('checked', false)
-            d3.select("#top_check").property('checked', false)
+
+        
+
+        document.getElementById("filter_motif_check").addEventListener("change", function() {
+            const isChecked = d3.select(this).property("checked");
+            if (isChecked){
+
+                let selected_motif = that.searchBar.value
+                that.alpha.drawAlphaScatter(selected_motif)
+                that.volcano.drawVolcano(selected_motif)
+                d3.select("#control_check").property('checked', false)
+                d3.select("#top_check").property('checked', false)
+            }
+            else{
+                that.alpha.drawAlphaScatter()
+                that.volcano.drawVolcano()
+
+            }
 
         });
+
+    
+
+
+        // document.getElementById("filter_button").addEventListener("click", function() {
+        //     let selected_motif = that.searchBar.value
+        //     that.alpha.drawAlphaScatter(selected_motif)
+        //     that.volcano.drawVolcano(selected_motif)
+        //     d3.select("#control_check").property('checked', false)
+        //     d3.select("#top_check").property('checked', false)
+
+        // });
 
         document.getElementById("show_button").addEventListener("click", function() {
             that.alpha.drawAlphaScatter()
             that.volcano.drawVolcano()
+            that.globalApplicationState.selected_motif = "none"
             d3.select("#control_check").property('checked', false)
             d3.select("#top_check").property('checked', false)
+            d3.select("#filter_motif_check").property('checked', false)
+
 
         });
 
@@ -323,12 +368,48 @@ class Info{
         //                       Add tool tips for each button/component
         //***********************************************************************        
         
+        d3.select('#treatment_info_g').on("mouseover", (event, d) => {
+            d3.select(".tooltip")
+                .html(d=>{
+                    if(that.globalApplicationState.selected_comparison != "none"){
+
+                        let [base_id, stim_id] = that.globalApplicationState.selected_comparison.split("_vs_")
+                        base_id = base_id.replace("__", "||")
+                        stim_id = stim_id.replace("__", "||")
+
+                       
+                        let base_time = that.globalApplicationState.time_map.get(base_id)
+                        let stim_time = that.globalApplicationState.time_map.get(stim_id)
+
+                        let base_cell = that.globalApplicationState.cell_map.get(base_id)
+                        let stim_cell = that.globalApplicationState.cell_map.get(stim_id)
+                        let base_con = that.globalApplicationState.concentration_map.get(base_id)
+                        let stim_con = that.globalApplicationState.concentration_map.get(stim_id)
+                        let base_name = that.globalApplicationState.display_name_map.get(base_id).split("\t(")[0]
+                        let stim_name = that.globalApplicationState.display_name_map.get(stim_id).split("\t(")[0]
+                                
+                        return(`<pre>${base_name}<br>\ttime: ${base_time}<br>\tconcentration: ${base_con}<br>\tcell type: ${base_cell}<br><br>${stim_name}<br>\ttime: ${stim_time}<br>\tconcentration: ${stim_con}<br>\tcell type: ${stim_cell}`)
+                    }
+                    return ("Select a Basal and Stimulated condition")
+                })
+                .style("left", "700px")
+                .style("top", "475px")
+                .transition()
+                .delay(0)
+                .style("opacity", 1)
+          })
+
+          .on("mouseleave", (event, d) => {
+            d3.select(".tooltip")
+            .style("opacity", 0)
+            .style("left", "-300px")
+            .style("top", "-300px")
+          })
+
         d3.selectAll('.control_check_group').on("mouseover", (event, d) => {
-            console.log(event.pageX)
             d3.select(".tooltip")
                 .html("Toggle on to see negative controls.<br><br>Negative controls include <br>Spacer and Scramble architectures.")
                 .style("left", `${event.pageX +30}px`)
-
                 .style("top", `${event.pageY - 80}px`)
                 .transition()
                 .delay(this.TOOL_TIP_DELAY)

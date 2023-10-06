@@ -132,6 +132,8 @@ class Alpha{
         const isChecked = d3.select(this).property("checked");
         if (isChecked) {
             d3.select("#top_check").property('checked', false)
+            d3.select("#filter_motif_check").property('checked', false)
+
             that.drawAlphaScatter()
             that.points.selectAll("circle")
                 .style("opacity", d => (d.controls === "True" ? 1 : 0))
@@ -150,6 +152,7 @@ class Alpha{
         const isChecked = d3.select("#top_check").property("checked");
         if (isChecked) {
             d3.select("#control_check").property('checked', false)
+            d3.select("#filter_motif_check").property('checked', false)
             that.drawAlphaScatter()
             that.points.selectAll("circle")
                 .filter(d => +d[that.max_rank_name] > n | d[that.max_rank_name] == "")
@@ -166,6 +169,8 @@ class Alpha{
         const isChecked = d3.select(this).property("checked");
         if (isChecked) {
             d3.select("#control_check").property('checked', false)
+            d3.select("#filter_motif_check").property('checked', false)
+
             that.drawAlphaScatter()
             that.points.selectAll("circle")
                 .filter(d => +d[that.max_rank_name] > n | d[that.max_rank_name] == "")
@@ -335,14 +340,10 @@ class Alpha{
             });
             this.searchBarBase.appendChild(this.datalistBase);  
         }
-    
-        
-
-        
-    
+     
     }
     
-    drawAlphaScatter(selected_motif = ""){
+    drawAlphaScatter(selected_motif = "none"){
 
         if (this.globalApplicationState.base != null && this.globalApplicationState.stimulated != null){
 
@@ -411,6 +412,23 @@ class Alpha{
             this.y_axis = this.alphaSvg.append('g').call(this.yAxis)
 
 
+            //Add the names of the top 5 to the legend if applicable
+            let top_5_motifs = selected_data.filter((d)=> +d[this.max_rank_name]<=5)
+            top_5_motifs = top_5_motifs.filter((d)=> d[this.max_rank_name]!="")
+
+            let top_5_map = new Map()
+            top_5_motifs.forEach(function(item) {
+                let m  = item["motif"]
+                let r = item[that.max_rank_name]
+                top_5_map.set(r, m);
+            });
+            
+            this.alphaSvg.select("#legend1").text(top_5_map.get("1.0") ? "1: " + top_5_map.get("1.0"):"1: None")
+            this.alphaSvg.select("#legend2").text(top_5_map.get("2.0") ? "2: " + top_5_map.get("2.0"):"2: None")
+            this.alphaSvg.select("#legend3").text(top_5_map.get("3.0") ? "3: " + top_5_map.get("3.0"):"3: None")
+            this.alphaSvg.select("#legend4").text(top_5_map.get("4.0") ? "4: " + top_5_map.get("4.0"):"4: None")
+            this.alphaSvg.select("#legend5").text(top_5_map.get("5.0") ? "5: " + top_5_map.get("5.0"):"5: None")
+
             this.points
                 .selectAll('circle')
                 .data(selected_data)
@@ -419,7 +437,7 @@ class Alpha{
                 .attr('cx', (d)=> this.x_scale(d[this.base_name]))
                 .attr('cy', (d)=> this.y_scale(d[this.stim_name]))
                 .attr('r', (d) =>{
-                    if (selected_motif==""){
+                    if (selected_motif=="none"){
                         if (+d[that.max_rank_name] <= 5 & d[that.max_rank_name]!= ""){
                             return(this.TOP_5_RADIUS)
                         }
@@ -432,7 +450,7 @@ class Alpha{
                     }
                 })
                 .style('fill', (d)=>{
-                    if (selected_motif==""){
+                    if (selected_motif=="none"){
                         if(+d[that.max_rank_name] <= 5 & d[that.max_rank_name]!= ""){
                             return that.globalApplicationState.scaleColor(+d[that.max_rank_name])
                         }
@@ -453,7 +471,7 @@ class Alpha{
                 .style('stroke', 'black')
                 .style('stroke-width', this.DEFAULT_STROKE_WIDTH)
                 .style('opacity', (d)=>{
-                    if (selected_motif==""){
+                    if (selected_motif=="none"){
                         if(+d[that.max_rank_name] <= 5 & d[that.max_rank_name]!= ""){
                             return that.TOP_5_OPACITY
                         }
@@ -498,6 +516,13 @@ class Alpha{
 
         else{
             //d3.selectAll('.child-div').style("opacity", this.CHILD_OFF_OPACITY).style("pointer-events", "none")
+
+            this.alphaSvg.select("#legend1").text("1")
+            this.alphaSvg.select("#legend2").text("2")
+            this.alphaSvg.select("#legend3").text("3")
+            this.alphaSvg.select("#legend4").text("4")
+            this.alphaSvg.select("#legend5").text("5")
+
 
             this.globalApplicationState.selected_comparison = "none"
             this.points

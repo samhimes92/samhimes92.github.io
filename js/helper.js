@@ -49,7 +49,7 @@ const helpers = {
 
         
         // If there is a highlighted motif, filter for it.
-        if (selected_motif != ""){
+        if (selected_motif != "none"){
             selected_data = selected_data.filter(function(d){return d.motif == selected_motif})
         }
 
