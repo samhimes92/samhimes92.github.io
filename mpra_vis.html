@@ -62,16 +62,27 @@
             </div>
         </div>
 
-        <div id="motif-wrapper-div" class="parent-div">
-           <h1>COMING SOON!</h1>
+        <div id="motif-wrapper-div">
+            <input type="text" id="search_motifs" width="10" list="allMotifs" placeholder="Search Motifs...">
+            <input type="text" id="sort_options" width="10" list="allMotifs" placeholder="Sort by...">
+
+            <div id="heat-div">
+            </div>
+            <div class="bottom-row">
+                <div id="scatter-div">
+                </div>
+                <div id="motif-info-div">
+                </div>
+            </div>
+            
         </div>
 </body>
 <script type = "module" src="js/helper.js"></script>
-
+<script src="js/heat.js"></script>
+<script src="js/scatter.js"></script>
+<script src="js/motif-info.js"></script>
 <script src="js/volcano.js"></script>
 <script src="js/alpha.js"></script>
 <script src="js/info.js"></script>
 <script type = "module" src="js/script.js"></script>
-
-
 </html>

@@ -1,16 +1,21 @@
 /* 
 General Div Layout 
 */
+#header-div{
+    position: relative;
+    z-index: 1; /* set higher z-index value */
+}
+#wrapper{
+    position: relative;
+}
 .parent-div {
     display: flex;
     /* position: relative; */
-
 }
 .child-div {
     /* flex: 1; */
    /* border: 2px solid red;  */
-    border-radius: 10px; 
-    
+    border-radius: 10px;  
 }  
 .right-column {
     display: flex;
@@ -29,6 +34,35 @@ General Div Layout
     width: 50%;
     /* margin-left: 20px; */
 }
+
+/* 
+Motif centric divs
+*/
+#motif-wrapper-div{
+position: absolute;
+display: flex;
+flex-direction: column;
+top: 70px;
+left: 10px;
+}
+.bottom-row{
+    display: flex;
+    flex-direction: row;
+
+}
+
+#heat-div{
+    /* position: absolute; */
+    
+}
+#scatter-div{
+    position: relative;
+
+
+
+}
+
+
 
 
 

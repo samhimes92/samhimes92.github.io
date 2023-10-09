@@ -181,8 +181,6 @@ class Info{
             .on("end", function() {
                 d3.select(this).classed("active", false);
                 rna_slider_text.text("");
-
-                console.log("that.globalApplicationState.selected_motif", that.globalApplicationState.selected_motif)
                 that.alpha.drawAlphaScatter(that.globalApplicationState.selected_motif)
                 that.volcano.drawVolcano(that.globalApplicationState.selected_motif)
                 that.alpha.check_negative_controls(false)
@@ -223,7 +221,6 @@ class Info{
         .attr("text-anchor", "left") 
         .style("font-size", this.SLIDER_LABEL_FONT_SIZE)
         .attr("fill", this.STIM_COLOR)
-
 
         this.dna_text = this.infoSvg
             .append("g")
@@ -300,15 +297,13 @@ class Info{
 
         }
 
-
         const that = this
-
-        
 
         document.getElementById("filter_motif_check").addEventListener("change", function() {
             const isChecked = d3.select(this).property("checked");
             if (isChecked){
                 let selected_motif = that.searchBar.value
+                that.globalApplicationState.selected_motif = selected_motif
                 that.alpha.drawAlphaScatter(selected_motif)
                 that.volcano.drawVolcano(selected_motif)
                 d3.select("#control_check").property('checked', false)
@@ -318,14 +313,11 @@ class Info{
 
             }
             else{
+                that.globalApplicationState.selected_motif = "none"
                 that.alpha.drawAlphaScatter()
                 that.volcano.drawVolcano()
             }
         });
-
-        
-
-    
 
         document.getElementById("show_button").addEventListener("click", function() {
             that.alpha.drawAlphaScatter()
@@ -351,17 +343,27 @@ class Info{
                 d3.select("#top_check").property('checked', false)
                 d3.select("#filter_motif_check").property('checked', false)
                 that.globalApplicationState.top_5_checked = false
+                that.globalApplicationState.selected_motif = "none"
+
             }
             that.alpha.check_negative_controls(true)
             that.volcano.check_negative_controls(true)
         });
 
         document.getElementById('top_check').addEventListener('change', function(){
+            console.log("here")
             that.globalApplicationState.top_5_checked = d3.select(this).property("checked")
-            if (that.globalApplicationState.controls_checked){
+
+            console.log("that.globalApplicationState.top_5_checked", that.globalApplicationState.top_5_checked)
+            console.log("control_checked", d3.select("#control_check").property("checked"))
+            console.log("motif_checked", d3.select("#filter_motif_check").property("checked"))
+
+            if (that.globalApplicationState.top_5_checked){
                 d3.select("#control_check").property('checked', false)
                 d3.select("#filter_motif_check").property('checked', false)
                 that.globalApplicationState.controls_checked = false
+                that.globalApplicationState.selected_motif = "none"
+
             }
             that.alpha.check_top_5(true)
             that.volcano.check_top_5(true)
@@ -664,6 +666,8 @@ class Info{
         this.infoSvg.select("#basal_text").text("Basal Alpha: ")
         this.infoSvg.select("#stimulated_text").text("Stimulated Alpha: ")
         this.selected_architecture = "none"
+        this.rna_text.selectAll("text").remove()
+        this.dna_text.selectAll("text").remove()
     }
 
     draw_barcode_n(n_rna_stim, n_rna_base,n_dna_stim, n_dna_base){

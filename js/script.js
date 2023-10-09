@@ -185,6 +185,9 @@ Promise.all([all_data, sequences, meta_data]).then( data =>
         let volcano = new Volcano(data[0], globalApplicationState, helpers)
         let alpha = new Alpha(data[0], globalApplicationState, volcano, helpers)
         let info = new Info(data[0], data[1], globalApplicationState, volcano, alpha, helpers)
+        let heat = new Heat(data[0], globalApplicationState)
+        let scatter = new Scatter(data[0], globalApplicationState)
+        let minfo = new Minfo(data[0], globalApplicationState)
 
         volcano.set_info(info)
         volcano.set_alpha(alpha)

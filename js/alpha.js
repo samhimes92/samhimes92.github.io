@@ -126,64 +126,6 @@ class Alpha{
         //***************************************
 
         const that = this
-          
-    //     document.getElementById('control_check').addEventListener('change', function(){
-    //         that.globalApplicationState.controls_checked = d3.select(this).property("checked")
-
-    //         that.check_negative_controls()
-    //     // const isChecked = d3.select(this).property("checked");
-    //     // if (isChecked) {
-    //     //     d3.select("#top_check").property('checked', false)
-    //     //     d3.select("#filter_motif_check").property('checked', false)
-
-    //     //     that.drawAlphaScatter()
-    //     //     that.points.selectAll("circle")
-    //     //         .style("opacity", d => (d.controls === "True" ? 1 : 0))
-    //     //         .filter(d => d.controls !== "True")
-    //     //         .remove();
-    //     // } 
-    //     // else {
-    //     //     that.drawAlphaScatter()
-    //     // }
-    //   });
-
-
-
-    //   document.getElementById('number_selector').addEventListener('change', function(){
-    //     let n = d3.select('#number_selector').property("value") === "" ? 5 : d3.select('#number_selector').property("value")
-    //     const isChecked = d3.select("#top_check").property("checked");
-    //     if (isChecked) {
-    //         d3.select("#control_check").property('checked', false)
-    //         d3.select("#filter_motif_check").property('checked', false)
-    //         that.drawAlphaScatter()
-    //         that.points.selectAll("circle")
-    //             .filter(d => +d[that.max_rank_name] > n | d[that.max_rank_name] == "")
-    //             .remove();
-    //     } 
-    //     else {
-    //         that.drawAlphaScatter()
-    //     }
-    //   });
-
-
-    //   document.getElementById('top_check').addEventListener('change', function(){
-    //     let n = d3.select('#number_selector').property("value") === "" ? 5 : d3.select('#number_selector').property("value")
-    //     const isChecked = d3.select(this).property("checked");
-    //     if (isChecked) {
-    //         d3.select("#control_check").property('checked', false)
-    //         d3.select("#filter_motif_check").property('checked', false)
-
-    //         that.drawAlphaScatter()
-    //         that.points.selectAll("circle")
-    //             .filter(d => +d[that.max_rank_name] > n | d[that.max_rank_name] == "")
-    //             .remove();
-    //     } 
-    //     else {
-    //         that.drawAlphaScatter()
-    //     }
-    //   });
-
-
 
         // d3.select("#searchBarStim").on("change", function(d) {
         document.getElementById('searchBarStim').addEventListener('change', function(){
@@ -202,11 +144,12 @@ class Alpha{
             that.info.updateSearchOptions()
             d3.select("#control_check").property('checked', false)
             d3.select("#top_check").property('checked', false)
+            d3.select("#filter_motif_check").property('checked', false)
+            that.globalApplicationState.selected_motif = "none"
 
         })
         document.getElementById('searchBarStim').addEventListener('click', function(){
             document.getElementById('searchBarStim').value = '';
-            
             that.globalApplicationState.stimulated = null
             that.drawAlphaScatter()
             that.volcano.drawVolcano()
@@ -214,9 +157,10 @@ class Alpha{
             that.info.updateSearchOptions()
             d3.select("#control_check").property('checked', false)
             d3.select("#top_check").property('checked', false)
+            d3.select("#filter_motif_check").property('checked', false)
+            that.globalApplicationState.selected_motif = "none"
         })
 
-        // d3.select("#searchBarBase").on("change", function(d) {
         document.getElementById('searchBarBase').addEventListener('change', function(){
 
             var selectedOption = d3.select(this).property("value")
@@ -232,6 +176,10 @@ class Alpha{
             that.info.updateSearchOptions()
             d3.select("#control_check").property('checked', false)
             d3.select("#top_check").property('checked', false)
+            d3.select("#filter_motif_check").property('checked', false)
+            that.globalApplicationState.selected_motif = "none"
+
+
 
 
         })
@@ -245,6 +193,8 @@ class Alpha{
             that.info.updateSearchOptions()
             d3.select("#control_check").property('checked', false)
             d3.select("#top_check").property('checked', false)
+            d3.select("#filter_motif_check").property('checked', false)
+            that.globalApplicationState.selected_motif = "none"
         })
 
        
