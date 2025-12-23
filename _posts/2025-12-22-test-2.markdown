@@ -5,7 +5,7 @@ date:   2025-12-22 09:23:53 -0600
 ---
 Here is my secont post. It's just a jpeg
 
-![Alt text](../resources/images/aang2.jpg)
+![Alt text](../assets/images/aang2.jpg)
 
 [jekyll-docs]: https://jekyllrb.com/docs/home
 [jekyll-gh]:   https://github.com/jekyll/jekyll
